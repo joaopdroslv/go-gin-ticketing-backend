@@ -15,7 +15,33 @@ func NewMySQLRepository(db *sql.DB) *mysqlRepository {
 	return &mysqlRepository{db: db}
 }
 
-func (r *mysqlRepository) FindByID(ctx context.Context, id string) (*User, error) {
+func (r *mysqlRepository) GetAll(ctx context.Context) (*[]User, error) {
+	rows, err := r.db.QueryContext(ctx,
+		`SELECT id, email, name FROM users ORDER BY id DESC`)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	users := make([]User, 0)
+
+	for rows.Next() {
+		var u User
+		if err := rows.Scan(&u.ID, &u.Email, &u.Name); err != nil {
+			return nil, err
+		}
+		users = append(users, u)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &users, nil
+}
+
+func (r *mysqlRepository) GetByID(ctx context.Context, id string) (*User, error) {
 	row := r.db.QueryRowContext(ctx,
 		`SELECT id, email, name FROM users WHERE id = ?`, id)
 
@@ -27,7 +53,7 @@ func (r *mysqlRepository) FindByID(ctx context.Context, id string) (*User, error
 	return &u, nil
 }
 
-func (r *mysqlRepository) Save(ctx context.Context, user *User) (*User, error) {
+func (r *mysqlRepository) Create(ctx context.Context, user *User) (*User, error) {
 	err := r.db.QueryRowContext(ctx,
 		`INSERT INTO users (email, name) VALUES (?, ?) RETURNING id`,
 		user.Email, user.Name,

@@ -12,8 +12,12 @@ func NewService(repo Repository) *Service {
 	return &Service{repo: repo}
 }
 
+func (s *Service) GetAll(ctx context.Context) (*[]User, error) {
+	return s.repo.GetAll(ctx)
+}
+
 func (s *Service) GetByID(ctx context.Context, id string) (*User, error) {
-	return s.repo.FindByID(ctx, id)
+	return s.repo.GetByID(ctx, id)
 }
 
 func (s *Service) Create(ctx context.Context, email, name string) (*User, error) {
@@ -22,5 +26,5 @@ func (s *Service) Create(ctx context.Context, email, name string) (*User, error)
 		return nil, err
 	}
 
-	return s.repo.Save(ctx, user)
+	return s.repo.Create(ctx, user)
 }

@@ -14,7 +14,16 @@ func NewHandler(s *Service) *Handler {
 	return &Handler{service: s}
 }
 
-func (h *Handler) Get(c *gin.Context) {
+func (h *Handler) GetAll(c *gin.Context) {
+	users, err := h.service.GetAll(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+
+	c.JSON(http.StatusOK, users)
+}
+
+func (h *Handler) GetByID(c *gin.Context) {
 	id := c.Param("id")
 
 	user, err := h.service.GetByID(c.Request.Context(), id)
