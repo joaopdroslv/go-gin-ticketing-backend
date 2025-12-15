@@ -6,15 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserHandler struct {
+type Handler struct {
 	service *Service
 }
 
-func NewUserHandler(s *Service) *UserHandler {
-	return &UserHandler{service: s}
+func NewHandler(s *Service) *Handler {
+	return &Handler{service: s}
 }
 
-func (h *UserHandler) Get(c *gin.Context) {
+func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
 
 	user, err := h.service.GetByID(c.Request.Context(), id)
@@ -31,7 +31,7 @@ type CreateUserRequest struct {
 	Name  string `json:"name" binding:"required"`
 }
 
-func (h *UserHandler) Create(c *gin.Context) {
+func (h *Handler) Create(c *gin.Context) {
 	var req CreateUserRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {

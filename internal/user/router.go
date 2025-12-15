@@ -5,7 +5,7 @@ import (
 )
 
 func RegisterRoutes(r *gin.RouterGroup, userService *Service) {
-	handler := NewUserHandler(userService)
+	handler := NewHandler(userService)
 
 	r.GET("/users/:id", handler.Get)
 	r.POST("/users", handler.Create)
