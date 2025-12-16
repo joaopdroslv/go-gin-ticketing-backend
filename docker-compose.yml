@@ -2,12 +2,14 @@ services:
   ticket-io-backend:
     build:
       context: .
-      dockerfile: dockerfile.ticket-io-backend
+      dockerfile: dockerfile.dev
     container_name: ticket-io-backend
     ports:
       - "8080:8080"
     env_file:
       - .env
+    volumes:
+      - .:/app
     restart: unless-stopped
     depends_on:
       - ticket-io-mysql
