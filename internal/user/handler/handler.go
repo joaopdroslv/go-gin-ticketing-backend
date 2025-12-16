@@ -1,16 +1,19 @@
-package user
+package handler
 
 import (
 	"net/http"
+	"ticket-io/internal/user/handler/dto"
+	"ticket-io/internal/user/service"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	service *Service
+	service *service.Service
 }
 
-func NewHandler(s *Service) *Handler {
+func NewHandler(s *service.Service) *Handler {
 	return &Handler{service: s}
 }
 
@@ -36,16 +39,17 @@ func (h *Handler) GetByID(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-type CreateUserRequest struct {
-	Email string `json:"email" binding:"required,email"`
-	Name  string `json:"name" binding:"required"`
-}
-
 func (h *Handler) Create(c *gin.Context) {
-	var req CreateUserRequest
+	var req dto.CreateUserRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	birthdate, err := time.Parse("2006-01-02", req.Birthdate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid birthdate"})
 		return
 	}
 
@@ -53,6 +57,8 @@ func (h *Handler) Create(c *gin.Context) {
 		c.Request.Context(),
 		req.Email,
 		req.Name,
+		birthdate,
+		req.StatusID,
 	)
 
 	if err != nil {
