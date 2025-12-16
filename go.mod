@@ -1,4 +1,4 @@
-module learning-gin
+module ticket-io
 
 go 1.25.5
 

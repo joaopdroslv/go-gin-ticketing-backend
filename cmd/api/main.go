@@ -1,10 +1,10 @@
 package main
 
 import (
-	"learning-gin/internal/config"
-	"learning-gin/internal/database"
-	"learning-gin/internal/user"
 	"log"
+	"ticket-io/internal/config"
+	"ticket-io/internal/database"
+	"ticket-io/internal/user"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"

@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	"learning-gin/internal/config"
-	"learning-gin/internal/seed"
+	"ticket-io/internal/config"
+	"ticket-io/internal/seed"
 
 	"github.com/brianvoe/gofakeit/v7"
 	_ "github.com/go-sql-driver/mysql"

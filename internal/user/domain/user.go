@@ -1,4 +1,4 @@
-package user
+package domain
 
 import (
 	"errors"
@@ -6,11 +6,11 @@ import (
 )
 
 type User struct {
-	ID        string
-	Email     string
-	Name      string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        string    `json:"id"`
+	Email     string    `json:"email"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func NewUser(email, name string) (*User, error) {
