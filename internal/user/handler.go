@@ -18,6 +18,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 	users, err := h.service.GetAll(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, users)
