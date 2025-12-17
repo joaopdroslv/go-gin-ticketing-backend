@@ -32,7 +32,7 @@ SET @active_user_status_id := (
 CREATE TABLE IF NOT EXISTS users (
     id              INT AUTO_INCREMENT PRIMARY KEY,
     name            VARCHAR(128) NOT NULL,
-    email           VARCHAR(128) NOT NULL,
+    email           VARCHAR(128) UNIQUE NOT NULL,
     birthdate       DATE NOT NULL,
     status_id       INT NOT NULL,
 
