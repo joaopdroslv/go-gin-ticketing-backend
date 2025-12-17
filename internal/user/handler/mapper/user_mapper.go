@@ -16,11 +16,11 @@ func UserToResponse(u *domain.User, statusName string) dto.UserResponse {
 	}
 }
 
-func UsersToResponse(users []*domain.User, statusMap map[int64]string) []dto.UserResponse {
+func UsersToResponse(users []domain.User, statusMap map[int64]string) []dto.UserResponse {
 	res := make([]dto.UserResponse, 0, len(users))
 
 	for _, u := range users {
-		res = append(res, UserToResponse(u, statusMap[u.StatusID]))
+		res = append(res, UserToResponse(&u, statusMap[u.StatusID]))
 	}
 
 	return res
