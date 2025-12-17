@@ -9,7 +9,7 @@ import (
 
 func Users(db *sql.DB, amount int) error {
 
-	var statusID int
+	var statusID int64
 
 	err := db.QueryRow(`
 		SELECT id FROM user_statuses WHERE name = 'active'

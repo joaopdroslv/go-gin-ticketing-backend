@@ -4,9 +4,9 @@ import (
 	"log"
 	"ticket-io/internal/config"
 	"ticket-io/internal/database"
-	userHandler "ticket-io/internal/user/handler"
-	userRepository "ticket-io/internal/user/repository"
-	userService "ticket-io/internal/user/service"
+	userFeatHandler "ticket-io/internal/user/handler"
+	userFeatRepository "ticket-io/internal/user/repository"
+	userFeatService "ticket-io/internal/user/service"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -26,9 +26,11 @@ func main() {
 
 	api := r.Group("/api/v1")
 
-	repo := userRepository.NewMySQLUserRepository(db)
-	srvc := userService.NewUserService(repo)
-	userHandler.RegisterRoutes(api, srvc)
+	userRepo := userFeatRepository.NewMySQLUserRepository(db)
+	userStatusRepo := userFeatRepository.NewMySQLUserStatusRepository(db)
+	userStatusSrvc := userFeatService.NewUserStatusService(userStatusRepo)
+	userSrvc := userFeatService.NewUserService(userRepo, userStatusSrvc)
+	userFeatHandler.RegisterRoutes(api, userSrvc)
 
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "Ok"})

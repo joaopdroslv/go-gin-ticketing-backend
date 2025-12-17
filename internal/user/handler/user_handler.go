@@ -3,7 +3,9 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"ticket-io/internal/shared/response"
 	"ticket-io/internal/user/handler/dto"
+	"ticket-io/internal/user/handler/mapper"
 	"ticket-io/internal/user/service"
 	"time"
 
@@ -19,13 +21,18 @@ func NewUserHandler(s *service.UserService) *UserHandler {
 }
 
 func (h *UserHandler) GetAll(c *gin.Context) {
-	users, err := h.userService.GetAll(c.Request.Context())
+	users, total, statusMap, err := h.userService.GetAllWithStatus(c.Request.Context())
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, users)
+	users_formatted := mapper.UsersToResponse(users, statusMap)
+
+	response.OK(c, dto.GetAllResponse{
+		Total: total,
+		Items: users_formatted,
+	})
 }
 
 func (h *UserHandler) GetByID(c *gin.Context) {
@@ -37,7 +44,7 @@ func (h *UserHandler) GetByID(c *gin.Context) {
 		return
 	}
 
-	user, err := h.userService.GetByID(c.Request.Context(), int(id))
+	user, err := h.userService.GetByID(c.Request.Context(), int64(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

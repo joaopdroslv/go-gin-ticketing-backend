@@ -17,7 +17,7 @@ func NewMySQLUserRepository(db *sql.DB) *mysqlUserRepository {
 	return &mysqlUserRepository{db: db}
 }
 
-func (r *mysqlUserRepository) GetAll(ctx context.Context) (*[]domain.User, error) {
+func (r *mysqlUserRepository) GetAll(ctx context.Context) ([]domain.User, error) {
 	rows, err := r.db.QueryContext(ctx, `
 		SELECT
 			id,
@@ -58,10 +58,10 @@ func (r *mysqlUserRepository) GetAll(ctx context.Context) (*[]domain.User, error
 		return nil, err
 	}
 
-	return &users, nil
+	return users, nil
 }
 
-func (r *mysqlUserRepository) GetByID(ctx context.Context, id int) (*domain.User, error) {
+func (r *mysqlUserRepository) GetByID(ctx context.Context, id int64) (*domain.User, error) {
 	row := r.db.QueryRowContext(ctx, `
 		SELECT
 			id,
@@ -114,4 +114,4 @@ func (r *mysqlUserRepository) Create(ctx context.Context, user *domain.User) (*d
 	return user, nil
 }
 
-// func (r *mysqlUserRepository) ChangeStatusByID(ctx context.Context, id int) (*domain.User, error) {}
+// func (r *mysqlUserRepository) ChangeStatusByID(ctx context.Context, id int64) (*domain.User, error) {}
