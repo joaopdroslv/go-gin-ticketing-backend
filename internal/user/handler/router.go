@@ -6,10 +6,10 @@ import (
 	"ticket-io/internal/user/service"
 )
 
-func RegisterRoutes(r *gin.RouterGroup, userService *service.Service) {
-	handler := NewHandler(userService)
+func RegisterRoutes(r *gin.RouterGroup, userService *service.UserService) {
+	userHandler := NewUserHandler(userService)
 
-	r.GET("/users", handler.GetAll)
-	r.GET("/users/:id", handler.GetByID)
-	r.POST("/users", handler.Create)
+	r.GET("/users", userHandler.GetAll)
+	r.GET("/users/:id", userHandler.GetByID)
+	r.POST("/users", userHandler.Create)
 }

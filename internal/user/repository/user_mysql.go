@@ -9,15 +9,15 @@ import (
 	"ticket-io/internal/user/domain"
 )
 
-type mysqlRepository struct {
+type mysqlUserRepository struct {
 	db *sql.DB
 }
 
-func NewMySQLRepository(db *sql.DB) *mysqlRepository {
-	return &mysqlRepository{db: db}
+func NewMySQLUserRepository(db *sql.DB) *mysqlUserRepository {
+	return &mysqlUserRepository{db: db}
 }
 
-func (r *mysqlRepository) GetAll(ctx context.Context) (*[]domain.User, error) {
+func (r *mysqlUserRepository) GetAll(ctx context.Context) (*[]domain.User, error) {
 	rows, err := r.db.QueryContext(ctx, `
 		SELECT
 			id,
@@ -62,7 +62,7 @@ func (r *mysqlRepository) GetAll(ctx context.Context) (*[]domain.User, error) {
 	return &users, nil
 }
 
-func (r *mysqlRepository) GetByID(ctx context.Context, id int) (*domain.User, error) {
+func (r *mysqlUserRepository) GetByID(ctx context.Context, id int) (*domain.User, error) {
 	row := r.db.QueryRowContext(ctx, `
 		SELECT
 			id,
@@ -93,7 +93,7 @@ func (r *mysqlRepository) GetByID(ctx context.Context, id int) (*domain.User, er
 	return &u, nil
 }
 
-func (r *mysqlRepository) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
+func (r *mysqlUserRepository) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
 	result, err := r.db.ExecContext(ctx,
 		`INSERT INTO users (email, name, birthdate, status_id) VALUES (?, ?, ?, ?)`,
 		user.Email,

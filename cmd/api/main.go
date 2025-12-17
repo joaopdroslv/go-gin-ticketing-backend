@@ -26,8 +26,8 @@ func main() {
 
 	api := r.Group("/api/v1")
 
-	repo := userRepository.NewMySQLRepository(db)
-	srvc := userService.NewService(repo)
+	repo := userRepository.NewMySQLUserRepository(db)
+	srvc := userService.NewUserService(repo)
 	userHandler.RegisterRoutes(api, srvc)
 
 	r.GET("/health", func(c *gin.Context) {
