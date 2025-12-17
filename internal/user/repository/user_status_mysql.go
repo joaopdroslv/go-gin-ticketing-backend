@@ -18,6 +18,7 @@ func NewMySQLUserStatusRepository(db *sql.DB) *mysqlUserStatusRepository {
 }
 
 func (r *mysqlUserStatusRepository) GetAll(ctx context.Context) ([]domain.UserStatus, error) {
+
 	rows, err := r.db.QueryContext(ctx, `SELECT * FROM main.user_statuses ORDER BY id DESC`)
 	if err != nil {
 		return nil, err

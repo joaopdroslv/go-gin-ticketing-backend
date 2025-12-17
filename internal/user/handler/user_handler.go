@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"ticket-io/internal/shared/enums"
+	"ticket-io/internal/shared/errors"
 	"ticket-io/internal/shared/response"
 	"ticket-io/internal/user/handler/dto"
 	"ticket-io/internal/user/handler/mapper"
@@ -39,9 +40,7 @@ func (h *UserHandler) GetAll(c *gin.Context) {
 }
 
 func (h *UserHandler) GetByID(c *gin.Context) {
-	idStr := c.Param("id")
-
-	id, err := strconv.ParseInt(idStr, 10, 64)
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		response.Fail(c, http.StatusInternalServerError, string(enums.ErrInvalidID))
 		return
@@ -57,14 +56,14 @@ func (h *UserHandler) GetByID(c *gin.Context) {
 }
 
 func (h *UserHandler) Create(c *gin.Context) {
-	var req dto.CreateUserRequest
+	var body dto.UserCreateBody
 
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if err := c.ShouldBindJSON(&body); err != nil {
 		response.Fail(c, http.StatusBadRequest, string(enums.ErrBadRequest))
 		return
 	}
 
-	birthdate, err := time.Parse("2006-01-02", req.Birthdate)
+	birthdate, err := time.Parse("2006-01-02", body.Birthdate)
 	if err != nil {
 		response.Fail(c, http.StatusBadRequest, "The provided birthdate is invalid.")
 		return
@@ -72,17 +71,48 @@ func (h *UserHandler) Create(c *gin.Context) {
 
 	user, err := h.userService.Create(
 		c.Request.Context(),
-		req.Email,
-		req.Name,
+		body.Email,
+		body.Name,
 		birthdate,
-		req.StatusID,
+		body.StatusID,
 	)
 	if err != nil {
 		response.Fail(c, 500, string(enums.ErrInternal))
 		return
 	}
 
-	// formatted_user = mapper.UserToResponse(user, )
+	// TODO: return formatted user
+
+	response.OK(c, user)
+}
+
+func (h *UserHandler) Update(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		response.Fail(c, http.StatusBadRequest, string(enums.ErrInvalidID))
+		return
+	}
+
+	var body dto.UserUpdateBody
+	if err := c.ShouldBindJSON(&body); err != nil {
+		response.Fail(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	user, err := h.userService.Update(c, id, body)
+	if err != nil {
+		switch err {
+		case errors.ErrNothingToUpdate:
+			response.Fail(c, http.StatusBadRequest, string(enums.ErrBadRequest))
+		case errors.ErrZeroRowsAffected:
+			response.Fail(c, http.StatusBadRequest, string(enums.ErrZeroRowsAffected))
+		default:
+			response.Fail(c, http.StatusInternalServerError, string(enums.ErrInternal))
+		}
+		return
+	}
+
+	// TODO: return formatted user
 
 	response.OK(c, user)
 }

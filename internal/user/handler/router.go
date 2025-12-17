@@ -12,4 +12,5 @@ func RegisterRoutes(r *gin.RouterGroup, userService *service.UserService) {
 	r.GET("/users", userHandler.GetAll)
 	r.GET("/users/:id", userHandler.GetByID)
 	r.POST("/users", userHandler.Create)
+	r.POST("/users/:id", userHandler.Update)
 }

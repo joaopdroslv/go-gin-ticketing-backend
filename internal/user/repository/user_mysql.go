@@ -3,10 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"strings"
 
 	_ "github.com/lib/pq"
 
+	"ticket-io/internal/shared/errors"
 	"ticket-io/internal/user/domain"
+	"ticket-io/internal/user/handler/dto"
 )
 
 type mysqlUserRepository struct {
@@ -18,6 +22,7 @@ func NewMySQLUserRepository(db *sql.DB) *mysqlUserRepository {
 }
 
 func (r *mysqlUserRepository) GetAll(ctx context.Context) ([]domain.User, error) {
+
 	rows, err := r.db.QueryContext(ctx, `
 		SELECT
 			id,
@@ -62,6 +67,7 @@ func (r *mysqlUserRepository) GetAll(ctx context.Context) ([]domain.User, error)
 }
 
 func (r *mysqlUserRepository) GetByID(ctx context.Context, id int64) (*domain.User, error) {
+
 	row := r.db.QueryRowContext(ctx, `
 		SELECT
 			id,
@@ -93,6 +99,7 @@ func (r *mysqlUserRepository) GetByID(ctx context.Context, id int64) (*domain.Us
 }
 
 func (r *mysqlUserRepository) Create(ctx context.Context, user *domain.User) (*domain.User, error) {
+
 	result, err := r.db.ExecContext(ctx,
 		`INSERT INTO users (email, name, birthdate, status_id) VALUES (?, ?, ?, ?)`,
 		user.Email,
@@ -112,6 +119,50 @@ func (r *mysqlUserRepository) Create(ctx context.Context, user *domain.User) (*d
 	user.ID = id
 
 	return user, nil
+}
+
+func (r *mysqlUserRepository) Update(ctx context.Context, id int64, data dto.UserUpdateBody) (*domain.User, error) {
+
+	fields := []string{}
+	args := []any{}
+
+	if data.Name != nil {
+		fields = append(fields, "name = ?")
+		args = append(args, *data.Name)
+	}
+
+	if data.Email != nil {
+		fields = append(fields, "email = ?")
+		args = append(args, *data.Email)
+	}
+
+	if data.Birthdate != nil {
+		fields = append(fields, "birthdate = ?")
+		args = append(args, *data.Birthdate)
+	}
+
+	if len(fields) == 0 {
+		return nil, errors.ErrNothingToUpdate
+	}
+
+	query := fmt.Sprintf(
+		"UPDATE users SET %s WHERE id = ?",
+		strings.Join(fields, ", "),
+	)
+
+	args = append(args, id)
+
+	res, err := r.db.ExecContext(ctx, query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, _ := res.RowsAffected()
+	if rows == 0 {
+		return nil, errors.ErrZeroRowsAffected
+	}
+
+	return r.GetByID(ctx, id)
 }
 
 // func (r *mysqlUserRepository) ChangeStatusByID(ctx context.Context, id int64) (*domain.User, error) {}

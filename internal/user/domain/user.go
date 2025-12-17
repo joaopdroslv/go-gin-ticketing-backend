@@ -17,6 +17,7 @@ type User struct {
 }
 
 func NewUser(email, name string, birthdate time.Time, statusID int64) (*User, error) {
+
 	if email == "" {
 		return nil, errors.New("e-mail is required")
 	}

@@ -10,6 +10,7 @@ type APIResponse[T any] struct {
 }
 
 func OK[T any](c *gin.Context, data T) {
+
 	c.JSON(200, APIResponse[T]{
 		StatusCode: 200,
 		Success:    true,
@@ -18,6 +19,7 @@ func OK[T any](c *gin.Context, data T) {
 }
 
 func Created[T any](c *gin.Context, data T) {
+
 	c.JSON(201, APIResponse[T]{
 		StatusCode: 201,
 		Success:    true,
@@ -26,6 +28,7 @@ func Created[T any](c *gin.Context, data T) {
 }
 
 func Fail(c *gin.Context, status int, err string) {
+
 	c.JSON(status, APIResponse[any]{
 		StatusCode: status,
 		Success:    false,

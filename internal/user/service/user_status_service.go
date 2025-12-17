@@ -17,10 +17,12 @@ func NewUserStatusService(
 }
 
 func (s *UserStatusService) GetAll(ctx context.Context) ([]domain.UserStatus, error) {
+
 	return s.userStatusRepository.GetAll(ctx)
 }
 
 func (s *UserStatusService) GetStatusMap(ctx context.Context) (map[int64]string, error) {
+
 	user_statuses, err := s.userStatusRepository.GetAll(ctx)
 	if err != nil {
 		return nil, err
