@@ -121,7 +121,7 @@ func (r *mysqlUserRepository) Create(ctx context.Context, user *domain.User) (*d
 	return user, nil
 }
 
-func (r *mysqlUserRepository) Update(ctx context.Context, id int64, data dto.UserUpdateBody) (*domain.User, error) {
+func (r *mysqlUserRepository) UpdateByID(ctx context.Context, id int64, data dto.UserUpdateBody) (*domain.User, error) {
 
 	fields := []string{}
 	args := []any{}
@@ -163,6 +163,25 @@ func (r *mysqlUserRepository) Update(ctx context.Context, id int64, data dto.Use
 	}
 
 	return r.GetByID(ctx, id)
+}
+
+func (r *mysqlUserRepository) DeleteByID(ctx context.Context, id int64) (bool, error) {
+
+	result, err := r.db.ExecContext(ctx, `DELETE FROM users WHERE id = ?`, id)
+	if err != nil {
+		return false, err
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return false, nil
+	}
+
+	if rows == 0 {
+		return false, errors.ErrZeroRowsAffected
+	}
+
+	return true, nil
 }
 
 // func (r *mysqlUserRepository) ChangeStatusByID(ctx context.Context, id int64) (*domain.User, error) {}

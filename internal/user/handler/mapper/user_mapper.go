@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-func UserToResponse(u *domain.User, statusName string) dto.UserResponse {
-	return dto.UserResponse{
+func UserToResponseUser(u *domain.User, statusName string) dto.ResponseUser {
+	return dto.ResponseUser{
 		ID:        u.ID,
 		Name:      u.Name,
 		Email:     u.Email,
@@ -16,11 +16,11 @@ func UserToResponse(u *domain.User, statusName string) dto.UserResponse {
 	}
 }
 
-func UsersToResponse(users []domain.User, statusMap map[int64]string) []dto.UserResponse {
-	res := make([]dto.UserResponse, 0, len(users))
+func UsersToResponse(users []domain.User, statusMap map[int64]string) []dto.ResponseUser {
+	res := make([]dto.ResponseUser, 0, len(users))
 
 	for _, u := range users {
-		res = append(res, UserToResponse(&u, statusMap[u.StatusID]))
+		res = append(res, UserToResponseUser(&u, statusMap[u.StatusID]))
 	}
 
 	return res

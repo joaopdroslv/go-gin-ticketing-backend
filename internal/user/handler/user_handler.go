@@ -86,7 +86,7 @@ func (h *UserHandler) Create(c *gin.Context) {
 	response.OK(c, user)
 }
 
-func (h *UserHandler) Update(c *gin.Context) {
+func (h *UserHandler) UpdateByID(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		response.Fail(c, http.StatusBadRequest, string(enums.ErrInvalidID))
@@ -99,7 +99,7 @@ func (h *UserHandler) Update(c *gin.Context) {
 		return
 	}
 
-	user, err := h.userService.Update(c, id, body)
+	user, err := h.userService.UpdateByID(c, id, body)
 	if err != nil {
 		switch err {
 		case errors.ErrNothingToUpdate:
@@ -115,4 +115,23 @@ func (h *UserHandler) Update(c *gin.Context) {
 	// TODO: return formatted user
 
 	response.OK(c, user)
+}
+
+func (h *UserHandler) DeleteByID(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		response.Fail(c, http.StatusBadRequest, string(enums.ErrInvalidID))
+		return
+	}
+
+	success, err := h.userService.DeleteByID(c.Request.Context(), int64(id))
+	if err != nil {
+		response.Fail(c, http.StatusNotFound, string(enums.ErrNotFound))
+		return
+	}
+
+	response.OK(c, dto.UserDeleteResponse{
+		ID:      id,
+		Deleted: success,
+	})
 }

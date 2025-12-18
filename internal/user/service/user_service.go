@@ -58,6 +58,10 @@ func (s *UserService) Create(ctx context.Context, email, name string, birthdate 
 	return s.userRepository.Create(ctx, user)
 }
 
-func (s *UserService) Update(ctx context.Context, id int64, data dto.UserUpdateBody) (*domain.User, error) {
-	return s.userRepository.Update(ctx, id, data)
+func (s *UserService) UpdateByID(ctx context.Context, id int64, data dto.UserUpdateBody) (*domain.User, error) {
+	return s.userRepository.UpdateByID(ctx, id, data)
+}
+
+func (s *UserService) DeleteByID(ctx context.Context, id int64) (bool, error) {
+	return s.userRepository.DeleteByID(ctx, id)
 }
