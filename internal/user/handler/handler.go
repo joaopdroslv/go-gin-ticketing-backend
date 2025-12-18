@@ -62,7 +62,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	responses.OK(c, user)
+	responses.OK(c, &user)
 }
 
 func (h *UserHandler) UpdateUserByID(c *gin.Context) {
@@ -86,7 +86,7 @@ func (h *UserHandler) UpdateUserByID(c *gin.Context) {
 		return
 	}
 
-	responses.OK(c, user)
+	responses.OK(c, &user)
 }
 
 func (h *UserHandler) DeleteUserByID(c *gin.Context) {
@@ -103,5 +103,5 @@ func (h *UserHandler) DeleteUserByID(c *gin.Context) {
 		return
 	}
 
-	responses.OK(c, resp)
+	responses.OK(c, &resp)
 }
