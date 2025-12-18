@@ -2,7 +2,7 @@ package domain
 
 import "time"
 
-type UserStatus struct {
+type Status struct {
 	ID          int64
 	Name        string
 	Description *string

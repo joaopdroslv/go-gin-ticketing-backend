@@ -1,4 +1,4 @@
-package repository
+package status
 
 import (
 	"context"
@@ -9,15 +9,16 @@ import (
 	"ticket-io/internal/user/domain"
 )
 
-type mysqlUserStatusRepository struct {
+type mysqlStatusRepository struct {
 	db *sql.DB
 }
 
-func NewMySQLUserStatusRepository(db *sql.DB) *mysqlUserStatusRepository {
-	return &mysqlUserStatusRepository{db: db}
+func New(db *sql.DB) *mysqlStatusRepository {
+
+	return &mysqlStatusRepository{db: db}
 }
 
-func (r *mysqlUserStatusRepository) GetAll(ctx context.Context) ([]domain.UserStatus, error) {
+func (r *mysqlStatusRepository) GetAll(ctx context.Context) ([]domain.Status, error) {
 
 	rows, err := r.db.QueryContext(ctx, `SELECT * FROM main.user_statuses ORDER BY id DESC`)
 	if err != nil {
@@ -25,10 +26,10 @@ func (r *mysqlUserStatusRepository) GetAll(ctx context.Context) ([]domain.UserSt
 	}
 	defer rows.Close()
 
-	user_statuses := make([]domain.UserStatus, 0)
+	user_statuses := make([]domain.Status, 0)
 
 	for rows.Next() {
-		var s domain.UserStatus
+		var s domain.Status
 
 		if err := rows.Scan(
 			&s.ID,

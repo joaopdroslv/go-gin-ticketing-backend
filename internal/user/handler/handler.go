@@ -8,21 +8,23 @@ import (
 	"ticket-io/internal/shared/responses"
 	"ticket-io/internal/user/handler/dto"
 	"ticket-io/internal/user/handler/mapper"
-	"ticket-io/internal/user/service"
+	userservice "ticket-io/internal/user/service/user"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 type UserHandler struct {
-	userService *service.UserService
+	userService *userservice.UserService
 }
 
-func NewUserHandler(s *service.UserService) *UserHandler {
+func New(s *userservice.UserService) *UserHandler {
+
 	return &UserHandler{userService: s}
 }
 
 func (h *UserHandler) GetAll(c *gin.Context) {
+
 	users, total, statusMap, err := h.userService.GetAllWithStatus(c.Request.Context())
 	if err != nil {
 		responses.Fail(c, http.StatusInternalServerError, string(enums.ErrInternal))
@@ -40,6 +42,7 @@ func (h *UserHandler) GetAll(c *gin.Context) {
 }
 
 func (h *UserHandler) GetByID(c *gin.Context) {
+
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		responses.Fail(c, http.StatusInternalServerError, string(enums.ErrInvalidID))
@@ -56,6 +59,7 @@ func (h *UserHandler) GetByID(c *gin.Context) {
 }
 
 func (h *UserHandler) Create(c *gin.Context) {
+
 	var body dto.UserCreateBody
 
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -87,6 +91,7 @@ func (h *UserHandler) Create(c *gin.Context) {
 }
 
 func (h *UserHandler) UpdateByID(c *gin.Context) {
+
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		responses.Fail(c, http.StatusBadRequest, string(enums.ErrInvalidID))
@@ -94,6 +99,7 @@ func (h *UserHandler) UpdateByID(c *gin.Context) {
 	}
 
 	var body dto.UserUpdateBody
+
 	if err := c.ShouldBindJSON(&body); err != nil {
 		responses.Fail(c, http.StatusBadRequest, err.Error())
 		return
@@ -118,6 +124,7 @@ func (h *UserHandler) UpdateByID(c *gin.Context) {
 }
 
 func (h *UserHandler) DeleteByID(c *gin.Context) {
+
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		responses.Fail(c, http.StatusBadRequest, string(enums.ErrInvalidID))

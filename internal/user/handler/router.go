@@ -3,12 +3,12 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 
-	"ticket-io/internal/user/service"
+	"ticket-io/internal/user/service/user"
 )
 
-func RegisterRoutes(r *gin.RouterGroup, userService *service.UserService) {
+func RegisterRoutes(r *gin.RouterGroup, userService *user.UserService) {
 
-	userHandler := NewUserHandler(userService)
+	userHandler := New(userService)
 
 	r.GET("/users", userHandler.GetAll)
 	r.GET("/users/:id", userHandler.GetByID)

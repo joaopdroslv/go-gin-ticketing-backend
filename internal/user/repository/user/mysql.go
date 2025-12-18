@@ -1,4 +1,4 @@
-package repository
+package user
 
 import (
 	"context"
@@ -17,7 +17,8 @@ type mysqlUserRepository struct {
 	db *sql.DB
 }
 
-func NewMySQLUserRepository(db *sql.DB) *mysqlUserRepository {
+func New(db *sql.DB) *mysqlUserRepository {
+
 	return &mysqlUserRepository{db: db}
 }
 
