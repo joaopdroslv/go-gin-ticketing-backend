@@ -32,17 +32,27 @@ SET @active_user_status_id := (
 CREATE TABLE IF NOT EXISTS users (
     id              INT AUTO_INCREMENT PRIMARY KEY,
     name            VARCHAR(128) NOT NULL,
-    email           VARCHAR(128) UNIQUE NOT NULL,
     birthdate       DATE NOT NULL,
     status_id       INT NOT NULL,
+
+    -- Authentication fields
+    email           VARCHAR(128) UNIQUE NOT NULL,
+    password_hash   VARCHAR(255) NOT NULL,
 
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- System root user
-INSERT INTO users (name, email, birthdate, status_id)
-VALUES ("system", "system@system.com", "2000-01-01", @active_user_status_id);
+INSERT INTO users (name, birthdate, status_id, email, password_hash)
+VALUES (
+    "system",
+    "2000-01-01",
+    @active_user_status_id,
+    "system@system.com",
+    -- This bcrypt(12) hash translates to "systemsystem123"
+    "$2a$12$sZ.BjwbUgXAigyfepBLH7uUXijODjjRUMEGEKRKCitjAN8yciNjhe"
+);
 
 SET @system_user_id := (
     SELECT id FROM users WHERE email = 'system@system.com' LIMIT 1
