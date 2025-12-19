@@ -6,29 +6,41 @@ import (
 	"ticket-io/internal/auth/domain"
 )
 
-type mysqlAuthUserRepository struct {
+type mysqlUserAuthRepository struct {
 	db *sql.DB
 }
 
-func New(db *sql.DB) *mysqlAuthUserRepository {
+func New(db *sql.DB) *mysqlUserAuthRepository {
 
-	return &mysqlAuthUserRepository{db: db}
+	return &mysqlUserAuthRepository{db: db}
 }
 
-func (r *mysqlAuthUserRepository) GetByEmail(ctx context.Context, email string) (*domain.AuthUser, error) {
+func (r *mysqlUserAuthRepository) GetUserByEmail(ctx context.Context, email string) (*domain.UserAuth, error) {
 	row := r.db.QueryRowContext(ctx, `
 		SELECT id, email, password_hash FROM users WHERE email = ?
 	`, email)
 
-	var u domain.AuthUser
+	var u domain.UserAuth
 
-	if err := row.Scan(
-		&u.ID,
-		&u.Email,
-		&u.PasswordHash,
-	); err != nil {
+	if err := row.Scan(&u.ID, &u.Email, &u.PasswordHash); err != nil {
 		return nil, err
 	}
 
 	return &u, nil
+}
+
+func (r *mysqlUserAuthRepository) RegisterUser(ctx context.Context, user *domain.UserAuth) (*domain.UserAuth, error) {
+
+	res, err := r.db.ExecContext(ctx,
+		`INSERT INTO users (name, birthdate, email, password_hash, status_id) VALUES (?, ?, ?, ?, ?)`,
+		user.Name, user.Birthdate, user.Email, user.PasswordHash, user.StatusID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	id, _ := res.LastInsertId()
+	user.ID = id
+
+	return user, nil
 }
