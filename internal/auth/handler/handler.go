@@ -1,1 +1,59 @@
 package handler
+
+import (
+	"net/http"
+	"ticket-io/internal/auth/dto"
+	"ticket-io/internal/auth/service"
+	"ticket-io/internal/shared/responses"
+
+	"github.com/gin-gonic/gin"
+)
+
+type UserAuthHandler struct {
+	service *service.UserAuthService
+}
+
+func New(service *service.UserAuthService) *UserAuthHandler {
+
+	return &UserAuthHandler{service: service}
+}
+
+func (h *UserAuthHandler) RegisterUser(c *gin.Context) {
+
+	var body dto.UserRegisterBody
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		responses.Fail(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	user, err := h.service.RegisterUser(c, body)
+	if err != nil {
+		responses.Fail(c, http.StatusInternalServerError, err.Error())
+	}
+
+	responses.OK(c, gin.H{"id": user.ID})
+}
+
+func (h *UserAuthHandler) LoginUser(c *gin.Context) {
+
+	// var body struct {
+	// 	Email    string `json:"email" binding:"required,email"`
+	// 	Password string `json:"password" binding:"required"`
+	// }
+
+	var body dto.UserLoginBody
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		responses.Fail(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	token, err := h.service.LoginUser(c, body)
+	if err != nil {
+		responses.Fail(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	responses.OK(c, gin.H{"token": token})
+}
