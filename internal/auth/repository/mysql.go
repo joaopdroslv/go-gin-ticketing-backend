@@ -44,3 +44,32 @@ func (r *mysqlUserAuthRepository) RegisterUser(ctx context.Context, user *domain
 
 	return user, nil
 }
+
+func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID int64) (map[string]struct{}, error) {
+
+	rows, err := r.db.QueryContext(ctx, `
+		SELECT permissions.name
+		FROM permissions
+		JOIN role_permissions ON role_permissions.permission_id = permissions.id
+		JOIN user_roles ON user_roles.role_id = role_permissions.role_id
+		JOIN users ON users.id = user_roles.user_id
+		WHERE users.id = ?
+	`, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	permissions := make(map[string]struct{})
+
+	for rows.Next() {
+		var name string
+
+		if err := rows.Scan(&name); err != nil {
+			return nil, err
+		}
+		permissions[name] = struct{}{}
+	}
+
+	return permissions, nil
+}

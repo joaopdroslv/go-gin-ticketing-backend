@@ -71,3 +71,15 @@ func (s *UserAuthService) LoginUser(ctx context.Context, body dto.UserLoginBody)
 
 	return token.SignedString(s.jwtSecret)
 }
+
+func (s *UserAuthService) ValidateUserPermission(ctx context.Context, userID int64, permission string) (bool, error) {
+
+	permissions, err := s.repository.GetUserPermissions(ctx, userID)
+	if err != nil {
+		return false, err
+	}
+
+	_, ok := permissions[permission]
+
+	return ok, nil
+}
