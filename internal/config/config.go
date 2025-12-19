@@ -28,13 +28,16 @@ func Load() *Config {
 }
 
 func getEnv(key, fallback string) string {
+
 	if value := os.Getenv(key); value != "" {
 		return value
 	}
+
 	return fallback
 }
 
 func getEnvInt64(key string, fallback int64) int64 {
+
 	value := os.Getenv(key)
 	if value == "" {
 		return fallback
