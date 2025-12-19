@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -10,6 +11,8 @@ type Config struct {
 	HTTPPort             string
 	DockerDatabaseURL    string
 	LocalhostDatabaseURL string
+	JWTSecret            string
+	JWTTTL               int64
 }
 
 func Load() *Config {
@@ -19,6 +22,8 @@ func Load() *Config {
 		HTTPPort:             getEnv("HTTP_PORT", ":8080"),
 		DockerDatabaseURL:    getEnv("DOCKER_DATABASE_URL", ""),
 		LocalhostDatabaseURL: getEnv("LOCALHOST_DATABASE_URL", ""),
+		JWTSecret:            getEnv("JWT_SECRET", ""),
+		JWTTTL:               getEnvInt64("JWT_TTL", 3600),
 	}
 }
 
@@ -27,6 +32,20 @@ func getEnv(key, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+func getEnvInt64(key string, fallback int64) int64 {
+	value := os.Getenv(key)
+	if value == "" {
+		return fallback
+	}
+
+	parsed, err := strconv.ParseInt(value, 10, 64)
+	if err != nil {
+		return fallback
+	}
+
+	return parsed
 }
 
 func LoadEnvFile() {
