@@ -97,12 +97,16 @@ CREATE TABLE IF NOT EXISTS permissions (
 
 INSERT INTO permissions (name, description) VALUES
     (
-        "user:create",
-        "The role has permission to create a new user."
-    ),
-    (
         "user:read",
         "The role has permission to read users info."
+    ),
+    (
+        "user:list",
+        "The role has permission to list and read multiple users info."
+    ),
+    (
+        "user:create",
+        "The role has permission to create a new user."
     ),
     (
         "user:update",
@@ -117,12 +121,16 @@ INSERT INTO permissions (name, description) VALUES
     --     "The role has permission to inactivate a user."
     -- ),
     (
-        "ticket:create",
-        "The role has permission to open a new ticket."
+        "ticket:read",
+        "The role has permission to read tickets info."
     ),
     (
-        "ticket:read",
-        "The role has permission to read a ticket."
+        "ticket:list",
+        "The role has permission to list and read multiple tickets info."
+    ),
+    (
+        "ticket:create",
+        "The role has permission to open a new ticket."
     ),
     (
         "ticket:update",
@@ -134,13 +142,15 @@ INSERT INTO permissions (name, description) VALUES
     )
 ;
 
-SET @user_create := (SELECT id FROM permissions WHERE name = 'user:create');
 SET @user_read   := (SELECT id FROM permissions WHERE name = 'user:read');
+SET @user_list   := (SELECT id FROM permissions WHERE name = 'user:list');
+SET @user_create := (SELECT id FROM permissions WHERE name = 'user:create');
 SET @user_update := (SELECT id FROM permissions WHERE name = 'user:update');
 SET @user_delete := (SELECT id FROM permissions WHERE name = 'user:delete');
 
-SET @ticket_create := (SELECT id FROM permissions WHERE name = 'ticket:create');
 SET @ticket_read   := (SELECT id FROM permissions WHERE name = 'ticket:read');
+SET @ticket_list   := (SELECT id FROM permissions WHERE name = 'ticket:list');
+SET @ticket_create := (SELECT id FROM permissions WHERE name = 'ticket:create');
 SET @ticket_update := (SELECT id FROM permissions WHERE name = 'ticket:update');
 SET @ticket_close  := (SELECT id FROM permissions WHERE name = 'ticket:close');
 
@@ -159,16 +169,19 @@ CREATE TABLE IF NOT EXISTS role_permissions (
 );
 
 INSERT INTO role_permissions (role_id, permission_id) VALUES
-    (@common_role_id, @ticket_create),
     (@common_role_id, @ticket_read),
+    (@common_role_id, @ticket_list),
+    (@common_role_id, @ticket_create),
     (@common_role_id, @ticket_update),
     (@common_role_id, @ticket_close),
-    (@system_role_id, @user_create),
     (@system_role_id, @user_read),
+    (@system_role_id, @user_list),
+    (@system_role_id, @user_create),
     (@system_role_id, @user_update),
     (@system_role_id, @user_delete),
-    (@system_role_id, @ticket_create),
     (@system_role_id, @ticket_read),
+    (@system_role_id, @ticket_list),
+    (@system_role_id, @ticket_create),
     (@system_role_id, @ticket_update),
     (@system_role_id, @ticket_close)
 ;
