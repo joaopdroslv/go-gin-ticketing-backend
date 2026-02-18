@@ -1,9 +1,9 @@
 services:
-  ticket-io-backend:
+  backend:
     build:
       context: .
       dockerfile: dockerfile.dev
-    container_name: ticket-io-backend
+    container_name: backend
     ports:
       - "8080:8080"
     env_file:
@@ -12,16 +12,13 @@ services:
       - .:/app
     restart: unless-stopped
     depends_on:
-      - ticket-io-mysql
+      - backend-mysql
 
-  ticket-io-mysql:
+  backend-mysql:
     image: mysql:latest
-    container_name: ticket-io-mysql
+    container_name: backend-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: admin!
-      MYSQL_DATABASE: main
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
     volumes:
