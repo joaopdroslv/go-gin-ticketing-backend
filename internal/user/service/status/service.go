@@ -2,7 +2,7 @@ package status
 
 import (
 	"context"
-	"ticket-io/internal/user/domain"
+	"ticket-io/internal/user/models"
 	statusrepository "ticket-io/internal/user/repository/status"
 )
 
@@ -15,7 +15,7 @@ func New(statusRepository statusrepository.StatusRepository) *StatusService {
 	return &StatusService{statusRepository: statusRepository}
 }
 
-func (s *StatusService) ListStatuses(ctx context.Context) ([]domain.Status, error) {
+func (s *StatusService) ListStatuses(ctx context.Context) ([]models.Status, error) {
 
 	return s.statusRepository.ListStatuses(ctx)
 }

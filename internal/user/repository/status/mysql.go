@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"ticket-io/internal/user/domain"
+	"ticket-io/internal/user/models"
 )
 
 type mysqlStatusRepository struct {
@@ -19,7 +19,7 @@ func New(db *sql.DB) *mysqlStatusRepository {
 	return &mysqlStatusRepository{db: db}
 }
 
-func (r *mysqlStatusRepository) ListStatuses(ctx context.Context) ([]domain.Status, error) {
+func (r *mysqlStatusRepository) ListStatuses(ctx context.Context) ([]models.Status, error) {
 
 	rows, err := r.db.QueryContext(ctx, `SELECT * FROM main.user_statuses ORDER BY id DESC`)
 	if err != nil {
@@ -27,10 +27,10 @@ func (r *mysqlStatusRepository) ListStatuses(ctx context.Context) ([]domain.Stat
 	}
 	defer rows.Close()
 
-	userStatuses := make([]domain.Status, 0)
+	userStatuses := make([]models.Status, 0)
 
 	for rows.Next() {
-		var s domain.Status
+		var s models.Status
 
 		if err := rows.Scan(
 			&s.ID,

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"ticket-io/internal/auth/domain"
+	"ticket-io/internal/auth/schemas"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -24,7 +24,7 @@ func JWTAuthentication(jwtSecret string) gin.HandlerFunc {
 
 		token, err := jwt.ParseWithClaims(
 			tokenStr,
-			&domain.CustomClaims{},
+			&schemas.CustomClaims{},
 			func(t *jwt.Token) (any, error) {
 				if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, jwt.ErrSignatureInvalid
@@ -38,7 +38,7 @@ func JWTAuthentication(jwtSecret string) gin.HandlerFunc {
 			return
 		}
 
-		claims, ok := token.Claims.(*domain.CustomClaims)
+		claims, ok := token.Claims.(*schemas.CustomClaims)
 		if !ok {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return

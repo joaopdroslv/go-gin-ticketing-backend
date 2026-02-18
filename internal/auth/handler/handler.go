@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	"ticket-io/internal/auth/dto"
+	"ticket-io/internal/auth/schemas"
 	"ticket-io/internal/auth/service"
 	"ticket-io/internal/shared/responses"
 
@@ -20,7 +20,7 @@ func New(service *service.UserAuthService) *UserAuthHandler {
 
 func (h *UserAuthHandler) RegisterUser(c *gin.Context) {
 
-	var body dto.UserRegisterBody
+	var body schemas.UserRegisterBody
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		responses.Failed(c, http.StatusBadRequest, err.Error())
@@ -37,12 +37,7 @@ func (h *UserAuthHandler) RegisterUser(c *gin.Context) {
 
 func (h *UserAuthHandler) LoginUser(c *gin.Context) {
 
-	// var body struct {
-	// 	Email    string `json:"email" binding:"required,email"`
-	// 	Password string `json:"password" binding:"required"`
-	// }
-
-	var body dto.UserLoginBody
+	var body schemas.UserLoginBody
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		responses.Failed(c, http.StatusBadRequest, err.Error())

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"ticket-io/internal/shared/responses"
-	"ticket-io/internal/user/dto"
+	"ticket-io/internal/user/schemas"
 	userservice "ticket-io/internal/user/service/user"
 
 	"github.com/gin-gonic/gin"
@@ -49,7 +49,7 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
 
-	var body dto.UserCreateBody
+	var body schemas.UserCreateBody
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		responses.Failed(c, http.StatusBadRequest, err.Error())
@@ -73,7 +73,7 @@ func (h *UserHandler) UpdateUserByID(c *gin.Context) {
 		return
 	}
 
-	var body dto.UserUpdateBody
+	var body schemas.UserUpdateBody
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		responses.Failed(c, http.StatusBadRequest, err.Error())

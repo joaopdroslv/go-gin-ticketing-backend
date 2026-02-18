@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"ticket-io/internal/auth/domain"
+	"ticket-io/internal/auth/models"
 )
 
 type mysqlUserAuthRepository struct {
@@ -44,7 +45,7 @@ func (r *mysqlUserAuthRepository) RegisterUser(ctx context.Context, user *domain
 	return user, nil
 }
 
-func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID int64) ([]domain.Permission, error) {
+func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID int64) ([]models.Permission, error) {
 
 	rows, err := r.db.QueryContext(ctx, `
 		SELECT
@@ -63,10 +64,10 @@ func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID
 	}
 	defer rows.Close()
 
-	var permissions []domain.Permission
+	var permissions []models.Permission
 
 	for rows.Next() {
-		var permission domain.Permission
+		var permission models.Permission
 
 		if err := rows.Scan(
 			&permission.ID,

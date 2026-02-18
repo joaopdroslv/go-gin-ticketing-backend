@@ -1,11 +1,11 @@
-package domain
+package models
 
 import "time"
 
-type Status struct {
+type Permission struct {
 	ID          int64
 	Name        string
-	Description *string
+	Description string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

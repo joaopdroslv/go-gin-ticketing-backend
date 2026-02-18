@@ -10,7 +10,7 @@ import (
 
 	"ticket-io/internal/shared/errs"
 	"ticket-io/internal/user/domain"
-	"ticket-io/internal/user/dto"
+	"ticket-io/internal/user/schemas"
 )
 
 type mysqlUserRepository struct {
@@ -125,7 +125,7 @@ func (r *mysqlUserRepository) CreateUser(ctx context.Context, user *domain.User)
 	return user, nil
 }
 
-func (r *mysqlUserRepository) UpdateUserByID(ctx context.Context, id int64, data dto.UserUpdateBody) (*domain.User, error) {
+func (r *mysqlUserRepository) UpdateUserByID(ctx context.Context, id int64, data schemas.UserUpdateBody) (*domain.User, error) {
 
 	fields := []string{}
 	args := []any{}

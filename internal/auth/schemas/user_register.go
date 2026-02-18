@@ -1,4 +1,4 @@
-package dto
+package schemas
 
 type UserRegisterBody struct {
 	Name      string
@@ -7,4 +7,5 @@ type UserRegisterBody struct {
 	Password  string
 }
 
+// Not being used yet
 type UserRegisterResponse struct{}

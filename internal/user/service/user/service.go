@@ -3,9 +3,9 @@ package user
 import (
 	"context"
 	"ticket-io/internal/user/domain"
-	"ticket-io/internal/user/dto"
 	"ticket-io/internal/user/handler/mapper"
 	userrepository "ticket-io/internal/user/repository/user"
+	"ticket-io/internal/user/schemas"
 	"time"
 )
 
@@ -24,7 +24,7 @@ func New(
 	}
 }
 
-func (s *UserService) ListUsers(ctx context.Context) (*dto.GetAllResponse, error) {
+func (s *UserService) ListUsers(ctx context.Context) (*schemas.GetAllResponse, error) {
 
 	users, err := s.userRepository.ListUsers(ctx)
 	if err != nil {
@@ -38,13 +38,13 @@ func (s *UserService) ListUsers(ctx context.Context) (*dto.GetAllResponse, error
 
 	formattedUsers := mapper.UsersToResponseUsers(users, statusMap)
 
-	return &dto.GetAllResponse{
+	return &schemas.GetAllResponse{
 		Total: int64(len(formattedUsers)),
 		Users: formattedUsers,
 	}, nil
 }
 
-func (s *UserService) GetUserByID(ctx context.Context, id int64) (*dto.ResponseUser, error) {
+func (s *UserService) GetUserByID(ctx context.Context, id int64) (*schemas.ResponseUser, error) {
 
 	user, err := s.userRepository.GetUserByID(ctx, id)
 	if err != nil {
@@ -59,7 +59,7 @@ func (s *UserService) GetUserByID(ctx context.Context, id int64) (*dto.ResponseU
 	return mapper.UserToResponseUser(user, statusMap), nil
 }
 
-func (s *UserService) CreateUser(ctx context.Context, body dto.UserCreateBody) (*dto.ResponseUser, error) {
+func (s *UserService) CreateUser(ctx context.Context, body schemas.UserCreateBody) (*schemas.ResponseUser, error) {
 
 	birthdate, err := time.Parse("2006-01-02", body.Birthdate)
 	if err != nil {
@@ -84,7 +84,7 @@ func (s *UserService) CreateUser(ctx context.Context, body dto.UserCreateBody) (
 	return mapper.UserToResponseUser(user, statusMap), nil
 }
 
-func (s *UserService) UpdateUserByID(ctx context.Context, id int64, data dto.UserUpdateBody) (*dto.ResponseUser, error) {
+func (s *UserService) UpdateUserByID(ctx context.Context, id int64, data schemas.UserUpdateBody) (*schemas.ResponseUser, error) {
 
 	user, err := s.userRepository.UpdateUserByID(ctx, id, data)
 	if err != nil {
@@ -99,14 +99,14 @@ func (s *UserService) UpdateUserByID(ctx context.Context, id int64, data dto.Use
 	return mapper.UserToResponseUser(user, statusMap), nil
 }
 
-func (s *UserService) DeleteUserByID(ctx context.Context, id int64) (*dto.UserDeleteResponse, error) {
+func (s *UserService) DeleteUserByID(ctx context.Context, id int64) (*schemas.UserDeleteResponse, error) {
 
 	success, err := s.userRepository.DeleteUserByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto.UserDeleteResponse{
+	return &schemas.UserDeleteResponse{
 		ID:      id,
 		Deleted: success,
 	}, nil

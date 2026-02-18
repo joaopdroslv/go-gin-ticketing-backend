@@ -1,4 +1,4 @@
-package dto
+package schemas
 
 type ResponseUser struct {
 	ID        int64  `json:"id"`

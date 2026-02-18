@@ -5,8 +5,8 @@ import (
 	"errors"
 	"strconv"
 	"ticket-io/internal/auth/domain"
-	"ticket-io/internal/auth/dto"
 	"ticket-io/internal/auth/repository"
+	"ticket-io/internal/auth/schemas"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -32,7 +32,7 @@ func New(
 	}
 }
 
-func (s *UserAuthService) RegisterUser(ctx context.Context, body dto.UserRegisterBody) (*domain.UserAuth, error) {
+func (s *UserAuthService) RegisterUser(ctx context.Context, body schemas.UserRegisterBody) (*domain.UserAuth, error) {
 
 	birthdate, err := time.Parse("2006-01-02", body.Birthdate)
 	if err != nil {
@@ -50,7 +50,7 @@ func (s *UserAuthService) RegisterUser(ctx context.Context, body dto.UserRegiste
 	return s.repository.RegisterUser(ctx, user)
 }
 
-func (s *UserAuthService) LoginUser(ctx context.Context, body dto.UserLoginBody) (string, error) {
+func (s *UserAuthService) LoginUser(ctx context.Context, body schemas.UserLoginBody) (string, error) {
 
 	user, err := s.repository.GetUserByEmail(ctx, body.Email)
 	if err != nil {
@@ -61,7 +61,7 @@ func (s *UserAuthService) LoginUser(ctx context.Context, body dto.UserLoginBody)
 		return "", errors.New("invalid credentials")
 	}
 
-	claims := domain.CustomClaims{
+	claims := schemas.CustomClaims{
 		Role: "system", // Change this later, setting up all users as role=system
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   strconv.FormatInt(user.ID, 10),

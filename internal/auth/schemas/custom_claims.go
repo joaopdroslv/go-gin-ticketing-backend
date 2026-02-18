@@ -1,4 +1,4 @@
-package domain
+package schemas
 
 import "github.com/golang-jwt/jwt/v5"
 

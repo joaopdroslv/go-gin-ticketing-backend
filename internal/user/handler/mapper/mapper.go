@@ -2,13 +2,13 @@ package mapper
 
 import (
 	"ticket-io/internal/user/domain"
-	"ticket-io/internal/user/dto"
+	"ticket-io/internal/user/schemas"
 	"time"
 )
 
-func FormatUserToResponseUser(u *domain.User, statusName string) *dto.ResponseUser {
+func FormatUserToResponseUser(u *domain.User, statusName string) *schemas.ResponseUser {
 
-	return &dto.ResponseUser{
+	return &schemas.ResponseUser{
 		ID:        u.ID,
 		Name:      u.Name,
 		Email:     u.Email,
@@ -17,14 +17,14 @@ func FormatUserToResponseUser(u *domain.User, statusName string) *dto.ResponseUs
 	}
 }
 
-func UserToResponseUser(u *domain.User, statusMap map[int64]string) *dto.ResponseUser {
+func UserToResponseUser(u *domain.User, statusMap map[int64]string) *schemas.ResponseUser {
 
 	return FormatUserToResponseUser(u, statusMap[u.StatusID])
 }
 
-func UsersToResponseUsers(users []domain.User, statusMap map[int64]string) []dto.ResponseUser {
+func UsersToResponseUsers(users []domain.User, statusMap map[int64]string) []schemas.ResponseUser {
 
-	formattedUsers := make([]dto.ResponseUser, 0, len(users))
+	formattedUsers := make([]schemas.ResponseUser, 0, len(users))
 
 	for _, u := range users {
 		formattedUsers = append(formattedUsers, *FormatUserToResponseUser(&u, statusMap[u.StatusID]))
