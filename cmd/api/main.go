@@ -3,22 +3,22 @@ package main
 import (
 	"log"
 
-	"ticket-io/internal/config"
-	"ticket-io/internal/database"
+	"go-gin-ticketing-backend/internal/config"
+	"go-gin-ticketing-backend/internal/database"
 
-	authmiddleware "ticket-io/internal/auth/middleware"
+	authmiddleware "go-gin-ticketing-backend/internal/auth/middleware"
 
-	authhandler "ticket-io/internal/auth/handler"
-	userhandler "ticket-io/internal/user/handler"
+	authhandler "go-gin-ticketing-backend/internal/auth/handler"
+	userhandler "go-gin-ticketing-backend/internal/user/handler"
 
-	authservice "ticket-io/internal/auth/service"
-	statusservice "ticket-io/internal/user/service/status"
-	userservice "ticket-io/internal/user/service/user"
+	authservice "go-gin-ticketing-backend/internal/auth/service"
+	statusservice "go-gin-ticketing-backend/internal/user/service/status"
+	userservice "go-gin-ticketing-backend/internal/user/service/user"
 
-	authrepository "ticket-io/internal/auth/repository/auth"
-	permissionrepository "ticket-io/internal/auth/repository/permission"
-	statusrepository "ticket-io/internal/user/repository/status"
-	userrepository "ticket-io/internal/user/repository/user"
+	authrepository "go-gin-ticketing-backend/internal/auth/repository/auth"
+	permissionrepository "go-gin-ticketing-backend/internal/auth/repository/permission"
+	statusrepository "go-gin-ticketing-backend/internal/user/repository/status"
+	userrepository "go-gin-ticketing-backend/internal/user/repository/user"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"

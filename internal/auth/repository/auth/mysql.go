@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 	"database/sql"
-	"ticket-io/internal/auth/domain"
+	"go-gin-ticketing-backend/internal/auth/domain"
 )
 
 type mysqlUserAuthRepository struct {

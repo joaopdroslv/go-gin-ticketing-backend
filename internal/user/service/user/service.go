@@ -2,10 +2,10 @@ package user
 
 import (
 	"context"
-	"ticket-io/internal/user/domain"
-	"ticket-io/internal/user/handler/mapper"
-	userrepository "ticket-io/internal/user/repository/user"
-	"ticket-io/internal/user/schemas"
+	"go-gin-ticketing-backend/internal/user/domain"
+	"go-gin-ticketing-backend/internal/user/handler/mapper"
+	userrepository "go-gin-ticketing-backend/internal/user/repository/user"
+	"go-gin-ticketing-backend/internal/user/schemas"
 	"time"
 )
 

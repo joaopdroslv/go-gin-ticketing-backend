@@ -7,7 +7,7 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"ticket-io/internal/user/models"
+	"go-gin-ticketing-backend/internal/user/models"
 )
 
 type mysqlStatusRepository struct {

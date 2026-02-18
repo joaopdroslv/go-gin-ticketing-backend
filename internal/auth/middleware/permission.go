@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"ticket-io/internal/auth/service"
+	"go-gin-ticketing-backend/internal/auth/service"
 
 	"github.com/gin-gonic/gin"
 )

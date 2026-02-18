@@ -1,10 +1,10 @@
 package handler
 
 import (
+	"go-gin-ticketing-backend/internal/auth/schemas"
+	"go-gin-ticketing-backend/internal/auth/service"
+	"go-gin-ticketing-backend/internal/shared/responses"
 	"net/http"
-	"ticket-io/internal/auth/schemas"
-	"ticket-io/internal/auth/service"
-	"ticket-io/internal/shared/responses"
 
 	"github.com/gin-gonic/gin"
 )

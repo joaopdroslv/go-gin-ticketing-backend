@@ -2,8 +2,8 @@ package status
 
 import (
 	"context"
-	"ticket-io/internal/user/models"
-	statusrepository "ticket-io/internal/user/repository/status"
+	"go-gin-ticketing-backend/internal/user/models"
+	statusrepository "go-gin-ticketing-backend/internal/user/repository/status"
 )
 
 type StatusService struct {

@@ -2,7 +2,7 @@ package status
 
 import (
 	"context"
-	"ticket-io/internal/user/models"
+	"go-gin-ticketing-backend/internal/user/models"
 )
 
 type StatusRepository interface {

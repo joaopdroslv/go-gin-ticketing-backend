@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"ticket-io/internal/auth/middleware"
-	"ticket-io/internal/auth/service"
+	"go-gin-ticketing-backend/internal/auth/middleware"
+	"go-gin-ticketing-backend/internal/auth/service"
 
 	"github.com/gin-gonic/gin"
 )

@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 
-	"ticket-io/internal/user/domain"
-	"ticket-io/internal/user/schemas"
+	"go-gin-ticketing-backend/internal/user/domain"
+	"go-gin-ticketing-backend/internal/user/schemas"
 )
 
 type UserRepository interface {

@@ -3,7 +3,7 @@ package permission
 import (
 	"context"
 	"database/sql"
-	"ticket-io/internal/auth/models"
+	"go-gin-ticketing-backend/internal/auth/models"
 )
 
 type mysqlPermissionRepository struct {

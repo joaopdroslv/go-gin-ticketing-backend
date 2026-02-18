@@ -3,11 +3,11 @@ package service
 import (
 	"context"
 	"errors"
+	"go-gin-ticketing-backend/internal/auth/domain"
+	authrepository "go-gin-ticketing-backend/internal/auth/repository/auth"
+	permissionrepository "go-gin-ticketing-backend/internal/auth/repository/permission"
+	"go-gin-ticketing-backend/internal/auth/schemas"
 	"strconv"
-	"ticket-io/internal/auth/domain"
-	authrepository "ticket-io/internal/auth/repository/auth"
-	permissionrepository "ticket-io/internal/auth/repository/permission"
-	"ticket-io/internal/auth/schemas"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"

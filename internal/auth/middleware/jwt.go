@@ -1,10 +1,10 @@
 package middleware
 
 import (
+	"go-gin-ticketing-backend/internal/auth/schemas"
 	"net/http"
 	"strconv"
 	"strings"
-	"ticket-io/internal/auth/schemas"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

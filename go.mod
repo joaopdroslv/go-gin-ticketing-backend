@@ -1,4 +1,4 @@
-module ticket-io
+module go-gin-ticketing-backend
 
 go 1.25.5
 

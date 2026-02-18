@@ -8,9 +8,9 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"ticket-io/internal/shared/errs"
-	"ticket-io/internal/user/domain"
-	"ticket-io/internal/user/schemas"
+	"go-gin-ticketing-backend/internal/shared/errs"
+	"go-gin-ticketing-backend/internal/user/domain"
+	"go-gin-ticketing-backend/internal/user/schemas"
 )
 
 type mysqlUserRepository struct {

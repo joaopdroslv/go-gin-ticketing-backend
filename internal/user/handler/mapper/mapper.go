@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"ticket-io/internal/user/domain"
-	"ticket-io/internal/user/schemas"
+	"go-gin-ticketing-backend/internal/user/domain"
+	"go-gin-ticketing-backend/internal/user/schemas"
 	"time"
 )
 
