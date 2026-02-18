@@ -44,7 +44,7 @@ func (r *mysqlUserAuthRepository) RegisterUser(ctx context.Context, user *domain
 	return user, nil
 }
 
-func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID int64) (map[string]struct{}, error) {
+func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID int64) ([]string, error) {
 
 	rows, err := r.db.QueryContext(ctx, `
 		SELECT permissions.name
@@ -59,7 +59,7 @@ func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID
 	}
 	defer rows.Close()
 
-	permissions := make(map[string]struct{})
+	var permissions []string
 
 	for rows.Next() {
 		var name string
@@ -67,7 +67,7 @@ func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID
 		if err := rows.Scan(&name); err != nil {
 			return nil, err
 		}
-		permissions[name] = struct{}{}
+		permissions = append(permissions, name)
 	}
 
 	return permissions, nil

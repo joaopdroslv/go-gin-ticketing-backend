@@ -74,14 +74,20 @@ func (s *UserAuthService) LoginUser(ctx context.Context, body dto.UserLoginBody)
 	return token.SignedString(s.jwtSecret)
 }
 
-func (s *UserAuthService) ValidateUserPermission(ctx context.Context, userID int64, permission string) (bool, error) {
+func (s *UserAuthService) ValidateUserPermission(ctx context.Context, userID int64, userPermission string) (bool, error) {
 
 	permissions, err := s.repository.GetUserPermissions(ctx, userID)
 	if err != nil {
 		return false, err
 	}
 
-	_, ok := permissions[permission]
+	permissionsMap := make(map[string]struct{})
+
+	for _, permission := range permissions {
+		permissionsMap[permission] = struct{}{}
+	}
+
+	_, ok := permissionsMap[userPermission]
 
 	return ok, nil
 }
