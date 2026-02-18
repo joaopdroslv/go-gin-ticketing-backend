@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS main;
 USE main;
 
 CREATE TABLE IF NOT EXISTS user_statuses (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name            VARCHAR(32) NOT NULL UNIQUE,
     description     TEXT DEFAULT NULL,
 
@@ -33,11 +33,11 @@ SET @active_user_status_id := (
 );
 
 CREATE TABLE IF NOT EXISTS users (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    status_id       BIGINT UNSIGNED NOT NULL,
+
     name            VARCHAR(128) NOT NULL,
     birthdate       DATE NOT NULL,
-    status_id       INT NOT NULL,
-
     -- Authentication fields
     email           VARCHAR(128) UNIQUE NOT NULL,
     password_hash   VARCHAR(255) NOT NULL,
@@ -62,7 +62,8 @@ SET @system_user_id := (
 );
 
 CREATE TABLE IF NOT EXISTS roles (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
     name            VARCHAR(64) NOT NULL UNIQUE,
     description     TEXT DEFAULT NULL,
 
@@ -90,8 +91,9 @@ SET @common_role_id := (
 );
 
 CREATE TABLE IF NOT EXISTS permissions (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    name            VARCHAR(64) NOT NULL UNIQUE,
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+    name            VARCHAR(100) NOT NULL UNIQUE,
     description     TEXT DEFAULT NULL,
 
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -158,9 +160,9 @@ SET @ticket_update := (SELECT id FROM permissions WHERE name = "ticket:update");
 SET @ticket_close  := (SELECT id FROM permissions WHERE name = "ticket:close");
 
 CREATE TABLE IF NOT EXISTS role_permissions (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    role_id         INT NOT NULL,
-    permission_id   INT NOT NULL,
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    role_id         BIGINT UNSIGNED NOT NULL,
+    permission_id   BIGINT UNSIGNED NOT NULL,
 
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -190,9 +192,9 @@ INSERT INTO role_permissions (role_id, permission_id) VALUES
 ;
 
 CREATE TABLE IF NOT EXISTS role_inheritance (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    parent_role_id  INT NOT NULL,
-    child_role_id   INT NOT NULL,
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    parent_role_id  BIGINT UNSIGNED NOT NULL,
+    child_role_id   BIGINT UNSIGNED NOT NULL,
 
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -206,10 +208,10 @@ CREATE TABLE IF NOT EXISTS role_inheritance (
 -- INSERT INTO role_inheritance (parent_role_id, child_role_id) VALUES (@common_role_id, @system_role_id);
 
 CREATE TABLE IF NOT EXISTS user_roles (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    user_id         INT NOT NULL,
-    role_id         INT NOT NULL,
-    scope_id        INT DEFAULT NULL, -- Tenant/Project scope, for now it's gonna be null (global)
+    id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id         BIGINT UNSIGNED NOT NULL,
+    role_id         BIGINT UNSIGNED NOT NULL,
+    scope_id        BIGINT UNSIGNED DEFAULT NULL, -- Tenant/Project scope, for now it's gonna be null (global)
 
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
