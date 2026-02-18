@@ -76,17 +76,20 @@ func (s *UserAuthService) LoginUser(ctx context.Context, body dto.UserLoginBody)
 
 func (s *UserAuthService) ValidateUserPermission(ctx context.Context, userID int64, userPermission string) (bool, error) {
 
-	permissions, err := s.repository.GetUserPermissions(ctx, userID)
+	// Step 1. Get all user's userPermissions using its ID
+	userPermissions, err := s.repository.GetUserPermissions(ctx, userID)
 	if err != nil {
 		return false, err
 	}
 
+	// Step 2. Creating a permissions map (with empty structs) for each user permissions
 	permissionsMap := make(map[string]struct{})
 
-	for _, permission := range permissions {
-		permissionsMap[permission] = struct{}{}
+	for _, permission := range userPermissions {
+		permissionsMap[permission.Name] = struct{}{}
 	}
 
+	// Step 3. Validating if the user has the required permission
 	_, ok := permissionsMap[userPermission]
 
 	return ok, nil

@@ -44,10 +44,14 @@ func (r *mysqlUserAuthRepository) RegisterUser(ctx context.Context, user *domain
 	return user, nil
 }
 
-func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID int64) ([]string, error) {
+func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID int64) ([]domain.Permission, error) {
 
 	rows, err := r.db.QueryContext(ctx, `
-		SELECT permissions.name
+		SELECT
+			permissions.id,
+			permissions.name,
+			permissions.created_at,
+			permissions.updated_at
 		FROM permissions
 		JOIN role_permissions ON role_permissions.permission_id = permissions.id
 		JOIN user_roles ON user_roles.role_id = role_permissions.role_id
@@ -59,15 +63,20 @@ func (r *mysqlUserAuthRepository) GetUserPermissions(ctx context.Context, userID
 	}
 	defer rows.Close()
 
-	var permissions []string
+	var permissions []domain.Permission
 
 	for rows.Next() {
-		var name string
+		var permission domain.Permission
 
-		if err := rows.Scan(&name); err != nil {
+		if err := rows.Scan(
+			&permission.ID,
+			&permission.Name,
+			&permission.CreatedAt,
+			&permission.UpdatedAt,
+		); err != nil {
 			return nil, err
 		}
-		permissions = append(permissions, name)
+		permissions = append(permissions, permission)
 	}
 
 	return permissions, nil
