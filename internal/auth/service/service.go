@@ -57,20 +57,16 @@ func (s *UserAuthService) LoginUser(ctx context.Context, body dto.UserLoginBody)
 		return "", errors.New("invalid credentials")
 	}
 
-	if bcrypt.CompareHashAndPassword(
-		[]byte(user.PasswordHash), []byte(body.Password),
-	) != nil {
+	if bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(body.Password)) != nil {
 		return "", errors.New("invalid credentials")
 	}
-
-	now := time.Now()
 
 	claims := domain.CustomClaims{
 		Role: "system", // Change this later, setting up all users as role=system
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   strconv.FormatInt(user.ID, 10),
-			IssuedAt:  jwt.NewNumericDate(now),
-			ExpiresAt: jwt.NewNumericDate(now.Add(s.jwtTTL)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(s.jwtTTL)),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

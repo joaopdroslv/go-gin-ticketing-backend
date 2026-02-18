@@ -17,9 +17,7 @@ func New(db *sql.DB) *mysqlUserAuthRepository {
 
 func (r *mysqlUserAuthRepository) GetUserByEmail(ctx context.Context, email string) (*domain.UserAuth, error) {
 
-	row := r.db.QueryRowContext(ctx, `
-		SELECT id, email, password_hash FROM users WHERE email = ?
-	`, email)
+	row := r.db.QueryRowContext(ctx, `SELECT id, email, password_hash FROM users WHERE email = ?`, email)
 
 	var u domain.UserAuth
 
