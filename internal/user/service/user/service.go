@@ -3,9 +3,9 @@ package user
 import (
 	"context"
 	"go-gin-ticketing-backend/internal/user/domain"
-	"go-gin-ticketing-backend/internal/user/handler/mapper"
 	userrepository "go-gin-ticketing-backend/internal/user/repository/user"
 	"go-gin-ticketing-backend/internal/user/schemas"
+	"go-gin-ticketing-backend/internal/user/utils"
 	"time"
 )
 
@@ -36,11 +36,11 @@ func (s *UserService) ListUsers(ctx context.Context) (*schemas.GetAllResponse, e
 		return nil, err
 	}
 
-	formattedUsers := mapper.UsersToResponseUsers(users, userStatusesMap)
+	responseUsers := utils.DomainUsersToResponseUsers(users, userStatusesMap)
 
 	return &schemas.GetAllResponse{
-		Total: int64(len(formattedUsers)),
-		Users: formattedUsers,
+		Total: int64(len(responseUsers)),
+		Users: responseUsers,
 	}, nil
 }
 
@@ -56,7 +56,7 @@ func (s *UserService) GetUserByID(ctx context.Context, id int64) (*schemas.Respo
 		return nil, err
 	}
 
-	return mapper.UserToResponseUser(user, userStatusesMap), nil
+	return utils.DomainUserToResponseUser(user, userStatusesMap), nil
 }
 
 func (s *UserService) CreateUser(ctx context.Context, body schemas.UserCreateBody) (*schemas.ResponseUser, error) {
@@ -81,7 +81,7 @@ func (s *UserService) CreateUser(ctx context.Context, body schemas.UserCreateBod
 		return nil, err
 	}
 
-	return mapper.UserToResponseUser(user, userStatusesMap), nil
+	return utils.DomainUserToResponseUser(user, userStatusesMap), nil
 }
 
 func (s *UserService) UpdateUserByID(ctx context.Context, id int64, data schemas.UserUpdateBody) (*schemas.ResponseUser, error) {
@@ -96,7 +96,7 @@ func (s *UserService) UpdateUserByID(ctx context.Context, id int64, data schemas
 		return nil, err
 	}
 
-	return mapper.UserToResponseUser(user, userStatusesMap), nil
+	return utils.DomainUserToResponseUser(user, userStatusesMap), nil
 }
 
 func (s *UserService) DeleteUserByID(ctx context.Context, id int64) (*schemas.UserDeleteResponse, error) {
