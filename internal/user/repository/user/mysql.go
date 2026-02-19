@@ -26,15 +26,15 @@ func (r *mysqlUserRepository) ListUsers(ctx context.Context) ([]domain.User, err
 
 	rows, err := r.db.QueryContext(ctx, `
 		SELECT
-			id,
-			user_status_id,
-			email,
-			name,
-			birthdate,
-			created_at,
-			updated_at
-		FROM users
-		ORDER BY id DESC
+			users.id,
+			users.user_status_id,
+			users.email,
+			users.name,
+			users.birthdate,
+			users.created_at,
+			users.updated_at
+		FROM main.users
+		ORDER BY users.id DESC
 	`)
 	if err != nil {
 		return nil, fmt.Errorf("list users query: %w", err)
@@ -71,15 +71,15 @@ func (r *mysqlUserRepository) GetUserByID(ctx context.Context, id int64) (*domai
 
 	row := r.db.QueryRowContext(ctx, `
 		SELECT
-			id,
-			user_status_id,
-			email,
-			name,
-			birthdate,
-			created_at,
-			updated_at
-		FROM users
-		WHERE id = ?
+			users.id,
+			users.user_status_id,
+			users.email,
+			users.name,
+			users.birthdate,
+			users.created_at,
+			users.updated_at
+		FROM main.users
+		WHERE users.id = ?
 	`, id)
 
 	var user domain.User
@@ -106,10 +106,10 @@ func (r *mysqlUserRepository) CreateUser(ctx context.Context, user *domain.User)
 
 	result, err := r.db.ExecContext(ctx,
 		`INSERT INTO users (
-			user_status_id,
-			email,
-			name,
-			birthdate
+			users.user_status_id,
+			users.email,
+			users.name,
+			users.birthdate
 		) VALUES (?, ?, ?, ?)`,
 		user.UserStatusID, user.Email, user.Name, user.Birthdate,
 	)
@@ -133,17 +133,17 @@ func (r *mysqlUserRepository) UpdateUserByID(ctx context.Context, id int64, data
 	args := []any{}
 
 	if data.Name != nil {
-		fields = append(fields, "name = ?")
+		fields = append(fields, "users.name = ?")
 		args = append(args, data.Name)
 	}
 
 	if data.Email != nil {
-		fields = append(fields, "email = ?")
+		fields = append(fields, "users.email = ?")
 		args = append(args, data.Email)
 	}
 
 	if data.Birthdate != nil {
-		fields = append(fields, "birthdate = ?")
+		fields = append(fields, "users.birthdate = ?")
 		args = append(args, data.Birthdate)
 	}
 
@@ -152,7 +152,7 @@ func (r *mysqlUserRepository) UpdateUserByID(ctx context.Context, id int64, data
 	}
 
 	query := fmt.Sprintf(
-		"UPDATE users SET %s WHERE id = ?",
+		"UPDATE main.users SET %s WHERE users.id = ?",
 		strings.Join(fields, ", "),
 	)
 
@@ -177,7 +177,7 @@ func (r *mysqlUserRepository) UpdateUserByID(ctx context.Context, id int64, data
 
 func (r *mysqlUserRepository) DeleteUserByID(ctx context.Context, id int64) (bool, error) {
 
-	result, err := r.db.ExecContext(ctx, `DELETE FROM users WHERE id = ?`, id)
+	result, err := r.db.ExecContext(ctx, `DELETE FROM main.users WHERE users.id = ?`, id)
 	if err != nil {
 		return false, fmt.Errorf("delete user id=%d exec: %w", id, err)
 	}

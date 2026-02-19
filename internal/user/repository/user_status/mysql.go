@@ -23,13 +23,13 @@ func (r *mysqlUserStatusRepository) ListUserStatuses(ctx context.Context) ([]mod
 
 	rows, err := r.db.QueryContext(ctx, `
 		SELECT
-			id,
-			name,
-			description,
-			created_at,
-			updated_at
+			user_statuses.id,
+			user_statuses.name,
+			user_statuses.description,
+			user_statuses.created_at,
+			user_statuses.updated_at
 		FROM main.user_statuses
-		ORDER BY id DESC
+		ORDER BY user_statuses.id DESC
 	`)
 	if err != nil {
 		return nil, fmt.Errorf("list user statuses query: %w", err)
