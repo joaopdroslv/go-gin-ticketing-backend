@@ -39,22 +39,22 @@ func (r *mysqlUserStatusRepository) ListUserStatuses(ctx context.Context) ([]mod
 	userStatuses := make([]models.UserStatus, 0)
 
 	for rows.Next() {
-		var s models.UserStatus
+		var userStatus models.UserStatus
 
 		if err := rows.Scan(
-			&s.ID,
-			&s.Name,
-			&s.Description,
-			&s.CreatedAt,
-			&s.UpdatedAt,
+			&userStatus.ID,
+			&userStatus.Name,
+			&userStatus.Description,
+			&userStatus.CreatedAt,
+			&userStatus.UpdatedAt,
 		); err != nil {
 			return nil, fmt.Errorf("list user statuses scan: %w", err)
 		}
-		userStatuses = append(userStatuses, s)
+		userStatuses = append(userStatuses, userStatus)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("list user statuses rows error: %w", err)
+		return nil, fmt.Errorf("list user statuses rows: %w", err)
 	}
 
 	return userStatuses, nil

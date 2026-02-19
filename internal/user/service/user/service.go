@@ -31,12 +31,12 @@ func (s *UserService) ListUsers(ctx context.Context) (*schemas.GetAllResponse, e
 		return nil, err
 	}
 
-	statusMap, err := s.userStatusProvider.GetUserStatusesMap(ctx)
+	userStatusesMap, err := s.userStatusProvider.GetUserStatusesMap(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	formattedUsers := mapper.UsersToResponseUsers(users, statusMap)
+	formattedUsers := mapper.UsersToResponseUsers(users, userStatusesMap)
 
 	return &schemas.GetAllResponse{
 		Total: int64(len(formattedUsers)),
@@ -51,12 +51,12 @@ func (s *UserService) GetUserByID(ctx context.Context, id int64) (*schemas.Respo
 		return nil, err
 	}
 
-	statusMap, err := s.userStatusProvider.GetUserStatusesMap(ctx)
+	userStatusesMap, err := s.userStatusProvider.GetUserStatusesMap(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return mapper.UserToResponseUser(user, statusMap), nil
+	return mapper.UserToResponseUser(user, userStatusesMap), nil
 }
 
 func (s *UserService) CreateUser(ctx context.Context, body schemas.UserCreateBody) (*schemas.ResponseUser, error) {
@@ -76,12 +76,12 @@ func (s *UserService) CreateUser(ctx context.Context, body schemas.UserCreateBod
 		return nil, err
 	}
 
-	statusMap, err := s.userStatusProvider.GetUserStatusesMap(ctx)
+	userStatusesMap, err := s.userStatusProvider.GetUserStatusesMap(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return mapper.UserToResponseUser(user, statusMap), nil
+	return mapper.UserToResponseUser(user, userStatusesMap), nil
 }
 
 func (s *UserService) UpdateUserByID(ctx context.Context, id int64, data schemas.UserUpdateBody) (*schemas.ResponseUser, error) {
@@ -91,12 +91,12 @@ func (s *UserService) UpdateUserByID(ctx context.Context, id int64, data schemas
 		return nil, err
 	}
 
-	statusMap, err := s.userStatusProvider.GetUserStatusesMap(ctx)
+	userStatusesMap, err := s.userStatusProvider.GetUserStatusesMap(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return mapper.UserToResponseUser(user, statusMap), nil
+	return mapper.UserToResponseUser(user, userStatusesMap), nil
 }
 
 func (s *UserService) DeleteUserByID(ctx context.Context, id int64) (*schemas.UserDeleteResponse, error) {

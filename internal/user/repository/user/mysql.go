@@ -44,20 +44,20 @@ func (r *mysqlUserRepository) ListUsers(ctx context.Context) ([]domain.User, err
 	users := make([]domain.User, 0)
 
 	for rows.Next() {
-		var u domain.User
+		var user domain.User
 
 		if err := rows.Scan(
-			&u.ID,
-			&u.UserStatusID,
-			&u.Email,
-			&u.Name,
-			&u.Birthdate,
-			&u.CreatedAt,
-			&u.UpdatedAt,
+			&user.ID,
+			&user.UserStatusID,
+			&user.Email,
+			&user.Name,
+			&user.Birthdate,
+			&user.CreatedAt,
+			&user.UpdatedAt,
 		); err != nil {
 			return nil, fmt.Errorf("list users scan: %w", err)
 		}
-		users = append(users, u)
+		users = append(users, user)
 	}
 
 	if err := rows.Err(); err != nil {
@@ -82,16 +82,16 @@ func (r *mysqlUserRepository) GetUserByID(ctx context.Context, id int64) (*domai
 		WHERE id = ?
 	`, id)
 
-	var u domain.User
+	var user domain.User
 
 	if err := row.Scan(
-		&u.ID,
-		&u.UserStatusID,
-		&u.Email,
-		&u.Name,
-		&u.Birthdate,
-		&u.CreatedAt,
-		&u.UpdatedAt,
+		&user.ID,
+		&user.UserStatusID,
+		&user.Email,
+		&user.Name,
+		&user.Birthdate,
+		&user.CreatedAt,
+		&user.UpdatedAt,
 	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("user id=%d: %w", id, errs.ErrResourceNotFound)
@@ -99,7 +99,7 @@ func (r *mysqlUserRepository) GetUserByID(ctx context.Context, id int64) (*domai
 		return nil, fmt.Errorf("get user id=%d scan: %w", id, err)
 	}
 
-	return &u, nil
+	return &user, nil
 }
 
 func (r *mysqlUserRepository) CreateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
