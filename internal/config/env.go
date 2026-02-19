@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type Config struct {
+type Env struct {
 	HTTPPort             string
 	DockerDatabaseURL    string
 	LocalhostDatabaseURL string
@@ -15,11 +15,11 @@ type Config struct {
 	JWTTTL               int64
 }
 
-func Load() *Config {
+func NewEnv() *Env {
 
 	LoadEnvFile()
 
-	return &Config{
+	return &Env{
 		HTTPPort:             getEnv("HTTP_PORT", ":8080"),
 		DockerDatabaseURL:    getEnv("DOCKER_DATABASE_URL", ""),
 		LocalhostDatabaseURL: getEnv("LOCALHOST_DATABASE_URL", ""),

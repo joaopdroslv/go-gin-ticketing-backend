@@ -13,9 +13,9 @@ import (
 )
 
 func main() {
-	cfg := config.Load()
+	env := config.NewEnv()
 
-	db, err := sql.Open("mysql", cfg.LocalhostDatabaseURL)
+	db, err := sql.Open("mysql", env.LocalhostDatabaseURL)
 	if err != nil {
 		log.Fatal(err)
 	}

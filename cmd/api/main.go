@@ -26,9 +26,11 @@ import (
 
 func main() {
 
-	cfg := config.Load()
+	env := config.NewEnv()
+	logger := config.NewLogger()
+	_ = logger // Discarding it for now
 
-	db, err := database.NewMysql(cfg.DockerDatabaseURL)
+	db, err := database.NewMysql(env.DockerDatabaseURL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -47,14 +49,14 @@ func main() {
 	// services
 	userStatusService := userstatusservice.New(userStatusRepo)
 	userService := userservice.New(userRepo, userStatusService)
-	authService := authservice.New(authRepo, permissionRepo, cfg.JWTSecret, cfg.JWTTTL)
+	authService := authservice.New(authRepo, permissionRepo, env.JWTSecret, env.JWTTTL)
 
 	// handlers
 	authHandler := authhandler.New(authService)
 	userHandler := userhandler.New(userService)
 
 	// middlewares
-	jwtMiddleware := authmiddleware.JWTAuthentication(cfg.JWTSecret)
+	jwtMiddleware := authmiddleware.JWTAuthentication(env.JWTSecret)
 
 	// routes
 
