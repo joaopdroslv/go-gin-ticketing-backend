@@ -7,6 +7,7 @@ import (
 	authrepository "go-gin-ticketing-backend/internal/auth/repository/auth"
 	permissionrepository "go-gin-ticketing-backend/internal/auth/repository/permission"
 	"go-gin-ticketing-backend/internal/auth/schemas"
+	"go-gin-ticketing-backend/internal/shared/enums"
 	"strconv"
 	"time"
 
@@ -59,6 +60,14 @@ func (s *UserAuthService) LoginUser(ctx context.Context, body schemas.UserLoginB
 	user, err := s.userAuthRepository.GetUserByEmail(ctx, body.Email)
 	if err != nil {
 		return "", errors.New("invalid credentials")
+	}
+
+	if user.UserStatusID == int64(enums.Inactive) {
+		return "", errors.New("invalid credentials, inactive account")
+	}
+
+	if user.UserStatusID == int64(enums.DeletedAccount) {
+		return "", errors.New("invalid credentials, deleted account, request its reactivation")
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(body.Password)) != nil {

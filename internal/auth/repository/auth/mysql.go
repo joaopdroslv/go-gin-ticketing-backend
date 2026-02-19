@@ -17,15 +17,28 @@ func New(db *sql.DB) *mysqlUserAuthRepository {
 
 func (r *mysqlUserAuthRepository) GetUserByEmail(ctx context.Context, email string) (*domain.UserAuth, error) {
 
-	row := r.db.QueryRowContext(ctx, `SELECT id, email, password_hash FROM users WHERE email = ?`, email)
+	row := r.db.QueryRowContext(ctx, `
+		SELECT
+			id,
+			user_status_id,
+			email,
+			password_hash
+		FROM users
+		WHERE email = ?
+	`, email)
 
-	var u domain.UserAuth
+	var userAuth domain.UserAuth
 
-	if err := row.Scan(&u.ID, &u.Email, &u.PasswordHash); err != nil {
+	if err := row.Scan(
+		&userAuth.ID,
+		&userAuth.UserStatusID,
+		&userAuth.Email,
+		&userAuth.PasswordHash,
+	); err != nil {
 		return nil, err
 	}
 
-	return &u, nil
+	return &userAuth, nil
 }
 
 func (r *mysqlUserAuthRepository) RegisterUser(ctx context.Context, user *domain.UserAuth) (*domain.UserAuth, error) {
