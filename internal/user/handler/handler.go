@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"database/sql"
+	"errors"
 	"go-gin-ticketing-backend/internal/shared/responses"
 	"go-gin-ticketing-backend/internal/user/schemas"
 	userservice "go-gin-ticketing-backend/internal/user/service/user"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -12,11 +15,15 @@ import (
 
 type UserHandler struct {
 	userService *userservice.UserService
+	logger      *slog.Logger
 }
 
-func New(s *userservice.UserService) *UserHandler {
+func New(logger *slog.Logger, userService *userservice.UserService) *UserHandler {
 
-	return &UserHandler{userService: s}
+	return &UserHandler{
+		userService: userService,
+		logger:      logger,
+	}
 }
 
 func (h *UserHandler) ListUsers(c *gin.Context) {
@@ -40,7 +47,21 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 
 	user, err := h.userService.GetUserByID(c.Request.Context(), id)
 	if err != nil {
-		responses.Failed(c, http.StatusNotFound, err.Error())
+		// Do not treat sql in the handler
+		if errors.Is(err, sql.ErrNoRows) {
+			responses.OK(c, "user not found")
+			return
+		}
+
+		// TODO: Currently losing the stacktrace,
+		// the error is being considered thrown from the handler
+		// instead of one of the previous layers.
+		h.logger.Error(
+			"get user by id",
+			"error", err,
+			"user_id", id,
+		)
+		responses.Failed(c, http.StatusInternalServerError, "internal server error")
 		return
 	}
 

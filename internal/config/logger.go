@@ -10,6 +10,8 @@ import (
 
 func NewLogger() *slog.Logger {
 
+	os.Mkdir("logs", 0755)
+
 	fileWriter := &lumberjack.Logger{
 		Filename:   "logs/app.log",
 		MaxSize:    50, // mbs

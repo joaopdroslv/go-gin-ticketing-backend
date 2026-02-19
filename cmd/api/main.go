@@ -28,7 +28,6 @@ func main() {
 
 	env := config.NewEnv()
 	logger := config.NewLogger()
-	_ = logger // Discarding it for now
 
 	db, err := database.NewMysql(env.DockerDatabaseURL)
 	if err != nil {
@@ -36,7 +35,8 @@ func main() {
 	}
 
 	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
+	r.Use(gin.Recovery())
+	// r.Use(gin.Logger(), gin.Recovery())
 
 	apiV1Group := r.Group("/api/v1")
 
@@ -53,7 +53,7 @@ func main() {
 
 	// handlers
 	authHandler := authhandler.New(authService)
-	userHandler := userhandler.New(userService)
+	userHandler := userhandler.New(logger, userService)
 
 	// middlewares
 	jwtMiddleware := authmiddleware.JWTAuthentication(env.JWTSecret)
