@@ -20,7 +20,11 @@ INSERT INTO user_statuses (name, description) VALUES
     ),
     (
         "email_confirmation",
-        "When a user's account is awaiting email confirmation, it's not considered active yet."
+        "When a user's account is awaiting the email confirmation, it's not considered active yet."
+    ),
+    (
+        "password_creation",
+        "When a user's account is awaiting the creation of the password, it's not considered active yet."
     ),
     (
         "deleted_account",

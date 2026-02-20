@@ -62,12 +62,18 @@ func (s *UserAuthService) LoginUser(ctx context.Context, body schemas.UserLoginB
 		return "", errors.New("invalid credentials")
 	}
 
-	if user.UserStatusID == int64(enums.Inactive) {
+	switch user.UserStatusID {
+	case int64(enums.Inactive):
 		return "", errors.New("invalid credentials, inactive account")
-	}
 
-	if user.UserStatusID == int64(enums.DeletedAccount) {
-		return "", errors.New("invalid credentials, deleted account, request its reactivation")
+	case int64(enums.PasswordCreation):
+		return "", errors.New("invalid credentials, password creation pending")
+
+	case int64(enums.EmailConfirmation):
+		return "", errors.New("invalid credentials, email confirmation pending")
+
+	case int64(enums.DeletedAccount):
+		return "", errors.New("invalid credentials, deleted account")
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(body.Password)) != nil {
