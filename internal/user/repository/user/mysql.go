@@ -8,6 +8,7 @@ import (
 
 	_ "github.com/lib/pq"
 
+	shareddoamin "go-gin-ticketing-backend/internal/shared/domain"
 	"go-gin-ticketing-backend/internal/shared/errs"
 	"go-gin-ticketing-backend/internal/user/domain"
 	"go-gin-ticketing-backend/internal/user/schemas"
@@ -22,7 +23,7 @@ func New(db *sql.DB) *mysqlUserRepository {
 	return &mysqlUserRepository{db: db}
 }
 
-func (r *mysqlUserRepository) GetAllUsers(ctx context.Context) ([]domain.User, error) {
+func (r *mysqlUserRepository) GetAllUsers(ctx context.Context, pagination *shareddoamin.Pagination) ([]domain.User, error) {
 
 	rows, err := r.db.QueryContext(ctx, `
 		SELECT
@@ -35,7 +36,9 @@ func (r *mysqlUserRepository) GetAllUsers(ctx context.Context) ([]domain.User, e
 			users.updated_at
 		FROM main.users
 		ORDER BY users.id DESC
-	`)
+		LIMIT ?
+		OFFSET ?
+	`, pagination.Limit, pagination.Offset)
 	if err != nil {
 		return nil, err
 	}

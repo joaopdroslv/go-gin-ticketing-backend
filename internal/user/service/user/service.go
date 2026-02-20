@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	shareddomain "go-gin-ticketing-backend/internal/shared/domain"
+	sharedschemas "go-gin-ticketing-backend/internal/shared/schemas"
 	"go-gin-ticketing-backend/internal/user/domain"
 	userrepository "go-gin-ticketing-backend/internal/user/repository/user"
 	"go-gin-ticketing-backend/internal/user/schemas"
@@ -24,9 +26,11 @@ func New(
 	}
 }
 
-func (s *UserService) GetAllUsers(ctx context.Context) (*schemas.GetAllUsersResponse, error) {
+func (s *UserService) GetAllUsers(ctx context.Context, paginationQuery sharedschemas.PaginationQuery) (*schemas.GetAllUsersResponse, error) {
 
-	users, err := s.userRepository.GetAllUsers(ctx)
+	pagination := shareddomain.NewPagination(paginationQuery.Page, paginationQuery.Limit)
+
+	users, err := s.userRepository.GetAllUsers(ctx, pagination)
 	if err != nil {
 		return nil, err
 	}

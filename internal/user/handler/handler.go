@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"go-gin-ticketing-backend/internal/shared/responses"
+	sharedschemas "go-gin-ticketing-backend/internal/shared/schemas"
 	"go-gin-ticketing-backend/internal/user/schemas"
 	userservice "go-gin-ticketing-backend/internal/user/service/user"
 	"log/slog"
@@ -28,7 +29,14 @@ func New(logger *slog.Logger, userService *userservice.UserService) *UserHandler
 
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
 
-	resp, err := h.userService.GetAllUsers(c.Request.Context())
+	var paginationQuery sharedschemas.PaginationQuery
+	if err := c.ShouldBindQuery(&paginationQuery); err != nil {
+		responses.Failed(c, http.StatusBadRequest, "invalid query params")
+		return
+	}
+	paginationQuery.Normalize()
+
+	resp, err := h.userService.GetAllUsers(c.Request.Context(), paginationQuery)
 	if err != nil {
 		responses.Failed(c, http.StatusInternalServerError, err.Error())
 		return
