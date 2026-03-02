@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	accesscontrolhttp "go-gin-ticketing-backend/internal/access_control/http"
 	accesscontrolrepository "go-gin-ticketing-backend/internal/access_control/repository"
 	accesscontrolservice "go-gin-ticketing-backend/internal/access_control/service"
 	"go-gin-ticketing-backend/internal/api"
@@ -53,10 +54,12 @@ func main() {
 
 	authHandler := auth.NewAuthHandler(authService)
 	userHandler := user.NewUserHandler(userService)
+	permissionHandler := accesscontrolhttp.NewPermissionHandler(permissionService)
 
 	dependencies := api.Dependencies{
 		AuthHandler:       authHandler,
 		UserHandler:       userHandler,
+		PermissionHandler: permissionHandler,
 		JWTMiddleware:     &jwtMiddleware,
 		PermissionService: permissionService,
 	}

@@ -21,14 +21,14 @@ func NewUserHandler(userService *UserService) *UserHandler {
 
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
 
-	var paginationQuery sharedschemas.PaginationQuery
-	if err := c.ShouldBindQuery(&paginationQuery); err != nil {
+	var query sharedschemas.PaginationQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
 		sharedschemas.Failed(c, http.StatusBadRequest, "invalid query params")
 		return
 	}
-	paginationQuery.Normalize()
+	query.NormalizePagination()
 
-	response, err := h.userService.GetAllUsers(c.Request.Context(), paginationQuery)
+	response, err := h.userService.GetAllUsers(c.Request.Context(), query)
 	if err != nil {
 		sharedschemas.Failed(c, http.StatusInternalServerError, "sorry, something went wrong")
 		return

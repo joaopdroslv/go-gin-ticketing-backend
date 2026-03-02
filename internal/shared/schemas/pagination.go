@@ -12,7 +12,7 @@ type PaginationQuery struct {
 	Page  int64 `form:"page"`
 }
 
-func (p *PaginationQuery) Normalize() {
+func (p *PaginationQuery) NormalizePagination() {
 
 	if p.Limit <= 0 {
 		p.Limit = 10

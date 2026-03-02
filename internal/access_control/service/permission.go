@@ -4,6 +4,9 @@ import (
 	"context"
 	models "go-gin-ticketing-backend/internal/access_control/models"
 	repository "go-gin-ticketing-backend/internal/access_control/repository"
+	schemas "go-gin-ticketing-backend/internal/access_control/schemas"
+	"go-gin-ticketing-backend/internal/domain"
+	"log"
 )
 
 type PermissionService struct {
@@ -17,12 +20,28 @@ func NewPermissionService(
 	return &PermissionService{permissionRepository: permissionRepository}
 }
 
+// TODO: finish this method
 func (s *PermissionService) GetAllPermissions(
 	ctx context.Context,
-	name string,
-) ([]models.Permission, error) {
+	query *schemas.GetAllPermissionsQuery,
+) {
 
-	return s.permissionRepository.GetAllPermissions(ctx, name)
+	pagination := domain.NewPagination(query.Page, query.Limit)
+
+	// NOTE: No need for a dto for now
+	name := query.Name
+
+	permissions, total, err := s.permissionRepository.GetAllPermissions(ctx, name, pagination)
+	if err != nil {
+		log.Println(err)
+		// return nil, err
+	}
+
+	log.Println(permissions)
+	log.Println(total)
+
+	_ = permissions
+	_ = total
 }
 
 func (s *PermissionService) GetPermissionsByRoleID(

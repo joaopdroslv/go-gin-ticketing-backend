@@ -17,7 +17,7 @@ func Users(db *sql.DB, amount int) error {
 	}
 	defer tx.Rollback()
 
-	userCredentialQuery := `INSERT INTO main.user_credentials (email, password_hash) VALUES (?, ?)`
+	userCredentialQuery := "INSERT INTO main.user_credentials (email, password_hash) VALUES (?, ?)"
 	userQuery := `
 		INSERT INTO main.users (
 			user_credential_id,

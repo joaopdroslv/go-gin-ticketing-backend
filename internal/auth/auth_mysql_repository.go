@@ -21,7 +21,9 @@ func (r *AuthMysqlRepository) GetUserByEmail(
 	email string,
 ) (*UserCredential, error) {
 
-	row := r.db.QueryRowContext(ctx, `
+	row := r.db.QueryRowContext(
+		ctx,
+		`
 		SELECT
 			user_credentials.email,
 			user_credentials.password_hash,
@@ -30,7 +32,9 @@ func (r *AuthMysqlRepository) GetUserByEmail(
 		FROM main.user_credentials
 		JOIN main.users ON users.user_credential_id = user_credentials.id
 		WHERE user_credentials.email = ?
-	`, email)
+		`,
+		email,
+	)
 
 	var userCredential UserCredential
 

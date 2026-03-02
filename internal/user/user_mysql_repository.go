@@ -27,7 +27,9 @@ func (r *UserMysqlRepository) GetAllUsers(
 	pagination *domain.Pagination,
 ) ([]User, *int64, error) {
 
-	rows, err := r.db.QueryContext(ctx, `
+	rows, err := r.db.QueryContext(
+		ctx,
+		`
 		SELECT
 			users.id,
 			users.user_credential_id,
@@ -43,13 +45,16 @@ func (r *UserMysqlRepository) GetAllUsers(
 		ORDER BY users.id DESC
 		LIMIT ?
 		OFFSET ?
-	`, pagination.Limit, pagination.Offset)
+		`,
+		pagination.Limit,
+		pagination.Offset,
+	)
 	if err != nil {
 		return nil, nil, err
 	}
 	defer rows.Close()
 
-	users := make([]User, 0)
+	var users []User
 	var total int64
 
 	for rows.Next() {
@@ -86,7 +91,9 @@ func (r *UserMysqlRepository) GetAllUsers(
 
 func (r *UserMysqlRepository) GetAllUserStatuses(ctx context.Context) ([]UserStatus, error) {
 
-	rows, err := r.db.QueryContext(ctx, `
+	rows, err := r.db.QueryContext(
+		ctx,
+		`
 		SELECT
 			user_statuses.id,
 			user_statuses.name,
@@ -95,13 +102,14 @@ func (r *UserMysqlRepository) GetAllUserStatuses(ctx context.Context) ([]UserSta
 			user_statuses.updated_at
 		FROM main.user_statuses
 		ORDER BY user_statuses.id DESC
-	`)
+		`,
+	)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	userStatuses := make([]UserStatus, 0)
+	var userStatuses []UserStatus
 
 	for rows.Next() {
 		var userStatus UserStatus
@@ -128,7 +136,9 @@ func (r *UserMysqlRepository) GetAllUserStatuses(ctx context.Context) ([]UserSta
 
 func (r *UserMysqlRepository) GetUserByID(ctx context.Context, id int64) (*User, error) {
 
-	row := r.db.QueryRowContext(ctx, `
+	row := r.db.QueryRowContext(
+		ctx,
+		`
 		SELECT
 			users.id,
 			users.user_credential_id,
@@ -141,7 +151,9 @@ func (r *UserMysqlRepository) GetUserByID(ctx context.Context, id int64) (*User,
 		FROM main.users
 		JOIN main.user_credentials ON user_credentials.id = users.user_credential_id
 		WHERE users.id = ?
-	`, id)
+		`,
+		id,
+	)
 
 	var user User
 
@@ -224,7 +236,7 @@ func (r *UserMysqlRepository) UpdateUserByID(
 	data *UpdateUserData,
 ) (*User, error) {
 
-	query, args, err := r.formatUpdateUserQuery(id, data)
+	query, args, err := r.formatUpdateUserByIDQuery(id, data)
 	if err != nil {
 		return nil, err
 	}
@@ -246,7 +258,7 @@ func (r *UserMysqlRepository) UpdateUserByID(
 	return r.GetUserByID(ctx, id)
 }
 
-func (r UserMysqlRepository) formatUpdateUserQuery(
+func (r UserMysqlRepository) formatUpdateUserByIDQuery(
 	id int64,
 	data *UpdateUserData,
 ) (string, []any, error) {
@@ -276,10 +288,10 @@ func (r UserMysqlRepository) formatUpdateUserQuery(
 	setItems = append(setItems, userFields...)
 	setItems = append(setItems, userCredentialFields...)
 
-	query := `UPDATE main.users`
+	query := "UPDATE main.users"
 
 	if len(userCredentialFields) > 0 {
-		query += ` JOIN main.user_credentials ON user_credentials.id = users.user_credential_id`
+		query += " JOIN main.user_credentials ON user_credentials.id = users.user_credential_id"
 	}
 
 	query += fmt.Sprintf(" SET %s WHERE users.id = ?", strings.Join(setItems, ", "))
