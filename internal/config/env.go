@@ -21,7 +21,7 @@ type Env struct {
 
 func NewEnv() *Env {
 
-	LoadEnvFile()
+	_ = godotenv.Load()
 
 	return &Env{
 		HTTPPort:             getEnv("HTTP_PORT", "8080"),
@@ -55,10 +55,4 @@ func getEnvInt64(key string, fallback int64) int64 {
 	}
 
 	return parsed
-}
-
-func LoadEnvFile() {
-	// Load .env only for local execution (CLI, seeders, dev)
-
-	_ = godotenv.Load()
 }

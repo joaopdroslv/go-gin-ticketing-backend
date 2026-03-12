@@ -11,7 +11,7 @@ import (
 	"go-gin-ticketing-backend/internal/api"
 	"go-gin-ticketing-backend/internal/auth"
 	"go-gin-ticketing-backend/internal/config"
-	"go-gin-ticketing-backend/internal/database"
+	"go-gin-ticketing-backend/internal/infra"
 	"go-gin-ticketing-backend/internal/middlewares"
 	"go-gin-ticketing-backend/internal/user"
 
@@ -25,7 +25,7 @@ func main() {
 	logger := config.NewLogger()
 	_ = logger // Ignore it for now
 
-	db, err := database.NewMysql(env.DockerDatabaseURL)
+	db, err := infra.NewMysqlDatabase(env.DockerDatabaseURL)
 	if err != nil {
 		log.Fatal(err)
 	}
