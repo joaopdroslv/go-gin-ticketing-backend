@@ -164,7 +164,7 @@ func (r *PermissionRepositoryMysql) UserHasPermission(
 		JOIN main.permissions ON permissions.id = role_permissions.permission_id
 		WHERE TRUE
 			AND users.id = ?
-			AND permissions = '?'
+			AND permissions.name = ?
 		LIMIT 1
 		`,
 		id, permission,
