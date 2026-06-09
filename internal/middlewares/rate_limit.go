@@ -14,11 +14,29 @@ type clientInfo struct {
 }
 
 var (
-	mu      sync.Mutex
-	clients = make(map[string]*clientInfo)
+	mu          sync.Mutex
+	clients     = make(map[string]*clientInfo)
+	cleanupOnce sync.Once
 )
 
 func RateLimitMiddleware(maxRequests int64, window time.Duration) gin.HandlerFunc {
+
+	cleanupOnce.Do(func() {
+		go func() {
+			ticker := time.NewTicker(window * 2)
+			defer ticker.Stop()
+			for range ticker.C {
+				now := time.Now()
+				mu.Lock()
+				for key, info := range clients {
+					if now.After(info.WindowEnd) {
+						delete(clients, key)
+					}
+				}
+				mu.Unlock()
+			}
+		}()
+	})
 
 	return func(c *gin.Context) {
 
