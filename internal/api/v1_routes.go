@@ -1,7 +1,7 @@
 package api
 
 import (
-	accesscontrolhttp "go-gin-ticketing-backend/internal/access_control/http"
+	"go-gin-ticketing-backend/internal/access_control/http"
 	"go-gin-ticketing-backend/internal/auth"
 	"go-gin-ticketing-backend/internal/user"
 
@@ -21,5 +21,5 @@ func RegisterV1(apiGroup *gin.RouterGroup, dependencies Dependencies) {
 
 	// NOTE: no auth middleware for now
 	accessControlGroup := v1Group.Group("/access-control")
-	accesscontrolhttp.RegisterAccessControlRoutes(accessControlGroup, dependencies.PermissionHandler)
+	achttp.RegisterAccessControlRoutes(accessControlGroup, dependencies.PermissionHandler)
 }

@@ -1,20 +1,20 @@
-package accesscontrol
+package acservice
 
 import (
 	"context"
-	models "go-gin-ticketing-backend/internal/access_control/models"
-	repository "go-gin-ticketing-backend/internal/access_control/repository"
-	schemas "go-gin-ticketing-backend/internal/access_control/schemas"
+	"go-gin-ticketing-backend/internal/access_control/models"
+	"go-gin-ticketing-backend/internal/access_control/repository"
+	"go-gin-ticketing-backend/internal/access_control/schemas"
 	"go-gin-ticketing-backend/internal/domain"
 	"log"
 )
 
 type PermissionService struct {
-	permissionRepository repository.PermissionRepository
+	permissionRepository acrepository.PermissionRepository
 }
 
 func NewPermissionService(
-	permissionRepository repository.PermissionRepository,
+	permissionRepository acrepository.PermissionRepository,
 ) *PermissionService {
 
 	return &PermissionService{permissionRepository: permissionRepository}
@@ -23,7 +23,7 @@ func NewPermissionService(
 // TODO: finish this method
 func (s *PermissionService) GetAllPermissions(
 	ctx context.Context,
-	query *schemas.GetAllPermissionsQuery,
+	query *acschemas.GetAllPermissionsQuery,
 ) {
 
 	pagination := domain.NewPagination(query.Page, query.Limit)
@@ -47,7 +47,7 @@ func (s *PermissionService) GetAllPermissions(
 func (s *PermissionService) GetPermissionsByRoleID(
 	ctx context.Context,
 	id int64,
-) ([]models.Permission, error) {
+) ([]acmodels.Permission, error) {
 
 	return s.permissionRepository.GetPermissionsByRoleID(ctx, id)
 }

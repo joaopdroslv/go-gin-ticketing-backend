@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
-	accesscontrolhttp "go-gin-ticketing-backend/internal/access_control/http"
-	accesscontrolrepository "go-gin-ticketing-backend/internal/access_control/repository"
-	accesscontrolservice "go-gin-ticketing-backend/internal/access_control/service"
+	"go-gin-ticketing-backend/internal/access_control/http"
+	"go-gin-ticketing-backend/internal/access_control/repository"
+	"go-gin-ticketing-backend/internal/access_control/service"
 	"go-gin-ticketing-backend/internal/api"
 	"go-gin-ticketing-backend/internal/auth"
 	"go-gin-ticketing-backend/internal/config"
@@ -42,7 +42,7 @@ func main() {
 
 	userRepository := user.NewUserMysqlRepository(db)
 	authRepository := auth.NewAuthMysqlRepository(db)
-	permissionRepository := accesscontrolrepository.NewPermissionRepositoryMysql(db)
+	permissionRepository := acrepository.NewPermissionRepositoryMysql(db)
 
 	ctx := context.Background()
 	userService, err := user.NewUserService(ctx, userRepository)
@@ -50,11 +50,11 @@ func main() {
 		log.Fatal("failed to create the user service")
 	}
 	authService := auth.NewAuthService(authRepository, env.JWTSecret, env.JWTTTL)
-	permissionService := accesscontrolservice.NewPermissionService(permissionRepository)
+	permissionService := acservice.NewPermissionService(permissionRepository)
 
 	authHandler := auth.NewAuthHandler(authService)
 	userHandler := user.NewUserHandler(userService)
-	permissionHandler := accesscontrolhttp.NewPermissionHandler(permissionService)
+	permissionHandler := achttp.NewPermissionHandler(permissionService)
 
 	dependencies := api.Dependencies{
 		AuthHandler:       authHandler,

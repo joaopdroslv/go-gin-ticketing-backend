@@ -5,7 +5,7 @@ import (
 	"errors"
 	"go-gin-ticketing-backend/internal/domain"
 	"go-gin-ticketing-backend/internal/shared/enums"
-	sharedschemas "go-gin-ticketing-backend/internal/shared/schemas"
+	"go-gin-ticketing-backend/internal/shared/schemas"
 	"go-gin-ticketing-backend/internal/shared/utils"
 	"strconv"
 	"time"
@@ -81,7 +81,7 @@ func (s *AuthService) LoginUser(ctx context.Context, body LoginBody) (string, er
 		return "", domain.ErrInvalidCredentials
 	}
 
-	claims := sharedschemas.CustomClaims{
+	claims := schemas.CustomClaims{
 		Role: "system", // Change this later, setting up all users as role=system
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   strconv.FormatInt(userCredential.UserInfo.ID, 10),

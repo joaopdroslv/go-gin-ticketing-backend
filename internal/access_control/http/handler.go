@@ -1,28 +1,28 @@
-package accesscontrol
+package achttp
 
 import (
-	schemas "go-gin-ticketing-backend/internal/access_control/schemas"
-	service "go-gin-ticketing-backend/internal/access_control/service"
-	sharedschemas "go-gin-ticketing-backend/internal/shared/schemas"
+	"go-gin-ticketing-backend/internal/access_control/schemas"
+	"go-gin-ticketing-backend/internal/access_control/service"
+	"go-gin-ticketing-backend/internal/shared/schemas"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type PermissionHandler struct {
-	permissionService *service.PermissionService
+	permissionService *acservice.PermissionService
 }
 
-func NewPermissionHandler(permissionService *service.PermissionService) *PermissionHandler {
+func NewPermissionHandler(permissionService *acservice.PermissionService) *PermissionHandler {
 
 	return &PermissionHandler{permissionService: permissionService}
 }
 
 func (h *PermissionHandler) GetAllPermissions(c *gin.Context) {
 
-	var query schemas.GetAllPermissionsQuery
+	var query acschemas.GetAllPermissionsQuery
 	if err := c.ShouldBindQuery(&query); err != nil {
-		sharedschemas.Failed(c, http.StatusBadRequest, "invalid query params")
+		schemas.Failed(c, http.StatusBadRequest, "invalid query params")
 		return
 	}
 	query.NormalizePagination()
@@ -30,10 +30,10 @@ func (h *PermissionHandler) GetAllPermissions(c *gin.Context) {
 	h.permissionService.GetAllPermissions(c, &query)
 	// response, err := h.permissionService.GetAllPermissions(c, &query)
 	// if err != nil {
-	// 	sharedschemas.Failed(c, http.StatusInternalServerError, "sorry, something went wrong")
+	// 	schemas.Failed(c, http.StatusInternalServerError, "sorry, something went wrong")
 	// 	return
 	// }
 
-	sharedschemas.OK(c, gin.H{"message": "Ok"})
-	// sharedschemas.OK(c, &response)
+	schemas.OK(c, gin.H{"message": "Ok"})
+	// schemas.OK(c, &response)
 }

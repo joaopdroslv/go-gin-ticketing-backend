@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	sharedschemas "go-gin-ticketing-backend/internal/shared/schemas"
+	"go-gin-ticketing-backend/internal/shared/schemas"
 	"net/http"
 	"strconv"
 	"strings"
@@ -24,7 +24,7 @@ func JWTAuthenticationMiddleware(jwtSecret string) gin.HandlerFunc {
 
 		token, err := jwt.ParseWithClaims(
 			tokenStr,
-			&sharedschemas.CustomClaims{},
+			&schemas.CustomClaims{},
 			func(t *jwt.Token) (any, error) {
 				if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, jwt.ErrSignatureInvalid
@@ -38,7 +38,7 @@ func JWTAuthenticationMiddleware(jwtSecret string) gin.HandlerFunc {
 			return
 		}
 
-		claims, ok := token.Claims.(*sharedschemas.CustomClaims)
+		claims, ok := token.Claims.(*schemas.CustomClaims)
 		if !ok {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return

@@ -1,6 +1,6 @@
 package user
 
-import sharedschemas "go-gin-ticketing-backend/internal/shared/schemas"
+import "go-gin-ticketing-backend/internal/shared/schemas"
 
 type CreateUserBody struct {
 	Name      string `json:"name" binding:"required"`
@@ -24,7 +24,7 @@ type ResponseUser struct {
 
 type GetAllUsersResponse struct {
 	Items      []ResponseUser                   `json:"items"`
-	Pagination sharedschemas.ResponsePagination `json:"pagination"`
+	Pagination schemas.ResponsePagination `json:"pagination"`
 }
 
 type DeleteUserResponse struct {

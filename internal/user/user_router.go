@@ -1,7 +1,7 @@
 package user
 
 import (
-	accessservice "go-gin-ticketing-backend/internal/access_control/service"
+	"go-gin-ticketing-backend/internal/access_control/service"
 	"go-gin-ticketing-backend/internal/middlewares"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +10,7 @@ import (
 func RegisterUserRoutes(
 	r *gin.RouterGroup,
 	handler *UserHandler,
-	accessControl accessservice.AccessControl,
+	accessControl acservice.AccessControl,
 ) {
 
 	r.GET(

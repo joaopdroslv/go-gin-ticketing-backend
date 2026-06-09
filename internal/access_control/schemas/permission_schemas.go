@@ -1,6 +1,6 @@
-package accesscontrol
+package acschemas
 
-import sharedschemas "go-gin-ticketing-backend/internal/shared/schemas"
+import "go-gin-ticketing-backend/internal/shared/schemas"
 
 type FilterPermissionQuery struct {
 	Name *string `form:"name"`
@@ -8,7 +8,7 @@ type FilterPermissionQuery struct {
 
 type GetAllPermissionsQuery struct {
 	FilterPermissionQuery
-	sharedschemas.PaginationQuery
+	schemas.PaginationQuery
 }
 
 type ResponsePermission struct {
@@ -19,5 +19,5 @@ type ResponsePermission struct {
 
 type GetAllPermissionsResponse struct {
 	Items      []ResponsePermission             `json:"items"`
-	Pagination sharedschemas.ResponsePagination `json:"pagination"`
+	Pagination schemas.ResponsePagination `json:"pagination"`
 }

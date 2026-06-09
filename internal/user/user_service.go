@@ -4,7 +4,7 @@ import (
 	"context"
 	"go-gin-ticketing-backend/internal/domain"
 	"go-gin-ticketing-backend/internal/shared/enums"
-	sharedschemas "go-gin-ticketing-backend/internal/shared/schemas"
+	"go-gin-ticketing-backend/internal/shared/schemas"
 	"time"
 )
 
@@ -41,7 +41,7 @@ func getUserStatusesMap(userStatuses []UserStatus) map[int64]string {
 
 func (s *UserService) GetAllUsers(
 	ctx context.Context,
-	paginationQuery sharedschemas.PaginationQuery,
+	paginationQuery schemas.PaginationQuery,
 ) (*GetAllUsersResponse, error) {
 
 	pagination := domain.NewPagination(paginationQuery.Page, paginationQuery.Limit)
@@ -53,7 +53,7 @@ func (s *UserService) GetAllUsers(
 
 	return &GetAllUsersResponse{
 		Items: s.translateUsers(users, s.userStatusesMap),
-		Pagination: sharedschemas.ResponsePagination{
+		Pagination: schemas.ResponsePagination{
 			Page:      pagination.Page,
 			PageTotal: int64(len(users)),
 			Limit:     pagination.Limit,

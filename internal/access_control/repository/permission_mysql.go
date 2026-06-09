@@ -1,9 +1,9 @@
-package accesscontrol
+package acrepository
 
 import (
 	"context"
 	"database/sql"
-	models "go-gin-ticketing-backend/internal/access_control/models"
+	"go-gin-ticketing-backend/internal/access_control/models"
 	"go-gin-ticketing-backend/internal/domain"
 	"strings"
 )
@@ -21,7 +21,7 @@ func (r *PermissionRepositoryMysql) GetAllPermissions(
 	ctx context.Context,
 	name *string,
 	pagination *domain.Pagination,
-) ([]models.Permission, *int64, error) {
+) ([]acmodels.Permission, *int64, error) {
 
 	query, args := r.formatGetAllPermissionsQuery(name, pagination)
 
@@ -31,11 +31,11 @@ func (r *PermissionRepositoryMysql) GetAllPermissions(
 	}
 	defer rows.Close()
 
-	var permissions []models.Permission
+	var permissions []acmodels.Permission
 	var total int64
 
 	for rows.Next() {
-		var permission models.Permission
+		var permission acmodels.Permission
 		var totalCount int64
 
 		if err := rows.Scan(
@@ -102,7 +102,7 @@ func (r *PermissionRepositoryMysql) formatGetAllPermissionsQuery(
 func (r *PermissionRepositoryMysql) GetPermissionsByRoleID(
 	ctx context.Context,
 	id int64,
-) ([]models.Permission, error) {
+) ([]acmodels.Permission, error) {
 
 	rows, err := r.db.QueryContext(
 		ctx,
@@ -125,10 +125,10 @@ func (r *PermissionRepositoryMysql) GetPermissionsByRoleID(
 	}
 	defer rows.Close()
 
-	var permissions []models.Permission
+	var permissions []acmodels.Permission
 
 	for rows.Next() {
-		var permission models.Permission
+		var permission acmodels.Permission
 
 		if err := rows.Scan(
 			&permission.ID,
