@@ -1,15 +1,15 @@
 services:
   api:
     build:
-      context: .
-      dockerfile: dockerfile.api.dev
+      context: ..
+      dockerfile: docker/dockerfile.api.dev
     container_name: api
     ports:
       - "${HTTP_PORT}:${HTTP_PORT}"
     env_file:
-      - .env
+      - ../.env
     volumes:
-      - .:/app
+      - ..:/app
     restart: unless-stopped
     depends_on:
       mysql:
